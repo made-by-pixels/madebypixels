@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>More Than Pixels | Web & Graphic Design</title>
+    <title>More Than Pixels || Web & Graphic Design</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <i class="fa-solid fa-icons"></i>
     <style>
         * {
             margin: 0;
@@ -16,11 +15,20 @@
             font-family: 'Poppins', sans-serif;
         }
         
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             color: #333;
             line-height: 1.6;
             overflow-x: hidden;
             width: 100%;
+        }
+
+        /* Prevent scrolling when mobile menu is open */
+        body.nav-open {
+            overflow: hidden;
         }
         
         header {
@@ -39,6 +47,7 @@
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
         }
         
         .logo {
@@ -88,6 +97,27 @@
             width: 100%;
         }
 
+        .hamburger-menu {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 110;
+        }
+
+        .hamburger-menu .fa-times {
+            display: none;
+        }
+
+        .hamburger-menu.active .fa-bars {
+            display: none;
+        }
+
+        .hamburger-menu.active .fa-times {
+            display: block;
+        }
+
         section {
             padding: 100px 0;
             min-height: 100vh;
@@ -99,7 +129,7 @@
         }
         
         #home {
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
                         url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
             background-attachment: fixed;
             background-position: center;
@@ -108,7 +138,7 @@
         }
         
         #about {
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
                         url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
             background-attachment: fixed;
             background-position: center;
@@ -117,7 +147,7 @@
         }
         
         #services {
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
                         url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
             background-attachment: fixed;
             background-position: center;
@@ -126,7 +156,7 @@
         }
         
         #portfolio {
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
                         url('https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
             background-attachment: fixed;
             background-position: center;
@@ -135,7 +165,7 @@
         }
         
         #contact {
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
                         url('https://images.unsplash.com/photo-1528747045269-390fe33c19f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
             background-attachment: fixed;
             background-position: center;
@@ -194,7 +224,6 @@
             background: #3a5bef;
         }
         
-        /* Services Section Styles */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -214,6 +243,16 @@
             border-top: 4px solid transparent;
         }
 
+        .card-link-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            cursor: pointer;
+        }
+
         .service-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
@@ -227,9 +266,9 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             position: relative;
+            z-index: 3;
         }
 
         .service-logo img {
@@ -245,9 +284,10 @@
         .service-card h3 {
             font-size: 22px;
             margin-bottom: 15px;
-            color: #333;
+            color: #222;
             position: relative;
             display: inline-block;
+            z-index: 3;
         }
 
         .service-card h3::after {
@@ -267,55 +307,26 @@
         }
 
         .service-card p {
-            color: #666;
+            color: #444;
             font-size: 15px;
             line-height: 1.7;
+            position: relative;
+            z-index: 3;
         }
 
-        /* Service-specific branding */
-        .web-design {
-            border-top-color: #FF7F00;
-        }
-        .web-design .service-logo {
-            background: linear-gradient(135deg, #FF7F00 0%, #FFAA00 100%);
-        }
-
-        .web-dev {
-            border-top-color: #4a6bff;
-        }
-        .web-dev .service-logo {
-            background: linear-gradient(135deg, #4a6bff 0%, #6a8bff 100%);
-        }
-
-        .seo {
-            border-top-color: #2ECC71;
-        }
-        .seo .service-logo {
-            background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
-        }
-
-        .graphic-design {
-            border-top-color: #E1306C;
-        }
-        .graphic-design .service-logo {
-            background: linear-gradient(135deg, #E1306C 0%, #FD1D1D 100%);
-        }
-
-        .logos {
-            border-top-color: #9B59B6;
-        }
-        .logos .service-logo {
-            background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%);
-        }
-
-        .branding {
-            border-top-color: #3498DB;
-        }
-        .branding .service-logo {
-            background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%);
-        }
-
-        /* Portfolio Section */
+        .web-design { border-top-color: #FF7F00; }
+        .web-design .service-logo { background: linear-gradient(135deg, #FF7F00 0%, #FFAA00 100%); }
+        .web-dev { border-top-color: #4a6bff; }
+        .web-dev .service-logo { background: linear-gradient(135deg, #4a6bff 0%, #6a8bff 100%); }
+        .seo { border-top-color: #2ECC71; }
+        .seo .service-logo { background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%); }
+        .graphic-design { border-top-color: #E1306C; }
+        .graphic-design .service-logo { background: linear-gradient(135deg, #E1306C 0%, #FD1D1D 100%); }
+        .logos { border-top-color: #9B59B6; }
+        .logos .service-logo { background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%); }
+        .branding { border-top-color: #3498DB; }
+        .branding .service-logo { background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%); }
+        
         .portfolio-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -340,7 +351,6 @@
             transform: scale(1.1);
         }
 
-        /* Contact Section */
         .social-links {
             display: flex;
             flex-wrap: wrap;
@@ -380,7 +390,6 @@
             text-align: center;
         }
 
-        /* Platform-specific colors */
         .instagram { color: #E1306C; }
         .twitter { color: #1DA1F2; }
         .bluesky { color: #1185FE; }
@@ -419,58 +428,58 @@
                 width: 85%;
             }
             
-            h1 {
-                font-size: 36px;
-            }
-            
-            h2 {
-                font-size: 28px;
-            }
+            h1 { font-size: 36px; }
+            h2 { font-size: 28px; }
             
             nav {
-                flex-direction: column;
-                padding: 15px;
+                justify-content: space-between;
+            }
+
+            .hamburger-menu {
+                display: block;
             }
             
             .logo {
                 position: relative;
                 left: auto;
-                margin-bottom: 15px;
-                text-align: center;
-                width: 100%;
             }
             
             .menu {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100vh;
+                background: rgba(255, 255, 255, 0.98);
                 flex-direction: column;
+                justify-content: center;
                 align-items: center;
+                transition: left 0.3s ease-in-out;
+            }
+
+            .menu.active {
+                left: 0;
             }
             
             .menu li {
-                margin: 10px 0;
+                margin: 20px 0;
+            }
+
+            .menu li a {
+                font-size: 24px;
             }
             
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .social-links {
-                gap: 20px;
-            }
-
-            .social-link {
-                width: 70px;
-            }
-
-            .social-icon {
-                font-size: 35px;
-            }
+            .services-grid { grid-template-columns: 1fr; }
+            .social-links { gap: 20px; }
+            .social-link { width: 70px; }
+            .social-icon { font-size: 35px; }
         }
     </style>
 </head>
 <body>
     <header>
         <nav>
-            <div class="logo"><img src="https://i.imgur.com/qtzVNoJ.png"></div>
+            <div class="logo">LOGO</div>
             <ul class="menu">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
@@ -478,6 +487,10 @@
                 <li><a href="#portfolio">Portfolio</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
+            <button class="hamburger-menu" aria-label="Toggle Menu">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-times"></i>
+            </button>
         </nav>
     </header>
 
@@ -502,48 +515,54 @@
             <h2>Our Services</h2>
             <div class="services-grid">
                 <div class="service-card web-design">
+                    <a href="/web-design" class="card-link-overlay" aria-label="Web Design Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3242/3242257.png" alt="Web Design">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3242/3242257.png" alt="Web Design" onerror="this.onerror=null;this.src='https://placehold.co/50x50/FF7F00/FFFFFF?text=Icon';">
                     </div>
                     <h3>Web Design</h3>
                     <p>Custom website designs that reflect your brand and engage your audience with intuitive user experiences.</p>
                 </div>
                 
                 <div class="service-card web-dev">
+                    <a href="/web-development" class="card-link-overlay" aria-label="Web Development Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1006/1006363.png" alt="Web Development">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1006/1006363.png" alt="Web Development" onerror="this.onerror=null;this.src='https://placehold.co/50x50/4a6bff/FFFFFF?text=Icon';">
                     </div>
                     <h3>Web Development</h3>
                     <p>Responsive, high-performance websites built with clean code and modern technologies.</p>
                 </div>
                 
                 <div class="service-card seo">
+                    <a href="/seo" class="card-link-overlay" aria-label="SEO Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2997/2997132.png" alt="SEO Optimization">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2997/2997132.png" alt="SEO Optimization" onerror="this.onerror=null;this.src='https://placehold.co/50x50/2ECC71/FFFFFF?text=Icon';">
                     </div>
                     <h3>SEO Optimization</h3>
                     <p>Comprehensive strategies to improve your search rankings and drive qualified traffic to your site.</p>
                 </div>
                 
                 <div class="service-card graphic-design">
+                    <a href="/graphic-design" class="card-link-overlay" aria-label="Graphic Design Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2779/2779775.png" alt="Graphic Design">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2779/2779775.png" alt="Graphic Design" onerror="this.onerror=null;this.src='https://placehold.co/50x50/E1306C/FFFFFF?text=Icon';">
                     </div>
                     <h3>Graphic Design</h3>
                     <p>Visually stunning graphics, logos, and branding materials that make your business stand out.</p>
                 </div>
 
                 <div class="service-card logos">
+                    <a href="/logo-design" class="card-link-overlay" aria-label="Logo Design Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="Logo Design">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="Logo Design" onerror="this.onerror=null;this.src='https://placehold.co/50x50/9B59B6/FFFFFF?text=Icon';">
                     </div>
                     <h3>Logo Design</h3>
                     <p>Unique and memorable logos that capture your brand's essence and make a lasting impression.</p>
                 </div>
 
                 <div class="service-card branding">
+                    <a href="/branding" class="card-link-overlay" aria-label="Branding Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3281/3281289.png" alt="Branding">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3281/3281289.png" alt="Branding" onerror="this.onerror=null;this.src='https://placehold.co/50x50/3498DB/FFFFFF?text=Icon';">
                     </div>
                     <h3>Branding</h3>
                     <p>Complete brand identity packages including color palettes, typography, and visual guidelines.</p>
@@ -557,13 +576,13 @@
             <h2>Our Portfolio</h2>
             <div class="portfolio-grid">
                 <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Web Design Project">
+                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Web Design Project" onerror="this.onerror=null;this.src='https://placehold.co/600x400/fce4ec/FFFFFF?text=Project+1';">
                 </div>
                 <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="App Development Project">
+                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="App Development Project" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e3f2fd/FFFFFF?text=Project+2';">
                 </div>
                 <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Branding Project">
+                    <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Branding Project" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e8f5e9/FFFFFF?text=Project+3';">
                 </div>
             </div>
         </div>
@@ -604,22 +623,51 @@
     </section>
 
     <footer>
-        <p><sup>©</sup> 2025 <span class="bold">Alex Boldy</span>. All rights reserved.</p>
+        <p><sup>&copy;</sup> 2025 <span class="bold">Alex Boldy</span>. All rights reserved.</p>
     </footer>
 
     <script>
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hamburger menu logic
+            const hamburger = document.querySelector('.hamburger-menu');
+            const menu = document.querySelector('.menu');
+            const menuLinks = document.querySelectorAll('.menu a');
+            const body = document.body;
+
+            if (hamburger && menu) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    menu.classList.toggle('active');
+                    body.classList.toggle('nav-open');
+                });
+            }
+
+            // Close menu when a link is clicked
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (hamburger.classList.contains('active')) {
+                        hamburger.classList.remove('active');
+                        menu.classList.remove('active');
+                        body.classList.remove('nav-open');
+                    }
                 });
             });
-        });
 
-        // Image loading fallback
-        document.addEventListener('DOMContentLoaded', function() {
+
+            // Smooth scrolling for anchor links (already exists)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(this.getAttribute('href'));
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Image loading fallback for background images (already exists)
             const sections = document.querySelectorAll('section[id]');
             const fallbackColors = {
                 'home': '#e3f2fd',
@@ -630,15 +678,19 @@
             };
 
             sections.forEach(section => {
-                const img = new Image();
                 const bgImage = window.getComputedStyle(section).backgroundImage;
                 
-                if (bgImage.includes('url')) {
-                    img.src = bgImage.replace(/.*url\(["']?([^"']*)["']?\).*/, '$1');
-                    
-                    img.onerror = function() {
-                        section.style.background = fallbackColors[section.id] || '#f5f5f5';
-                    };
+                if (bgImage && bgImage.includes('url')) {
+                    const imgUrl = bgImage.replace(/.*url\(["']?([^"']*)["']?\).*/, '$1');
+                    if (imgUrl) {
+                        const img = new Image();
+                        img.src = imgUrl;
+                        img.onerror = function() {
+                            console.warn('Background image failed to load. Applying fallback color for section:', section.id);
+                            section.style.backgroundImage = 'none';
+                            section.style.backgroundColor = fallbackColors[section.id] || '#f5f5f5';
+                        };
+                    }
                 }
             });
         });
