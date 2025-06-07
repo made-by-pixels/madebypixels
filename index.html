@@ -26,7 +26,6 @@
             width: 100%;
         }
 
-        /* Prevent scrolling when mobile menu is open */
         body.nav-open {
             overflow: hidden;
         }
@@ -417,7 +416,12 @@
         .bold {
             font-weight: 700;
         }
-        
+
+        /* Mobile Social Links (hidden on desktop) */
+        .mobile-social-links {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             section {
                 background-attachment: scroll !important;
@@ -473,6 +477,25 @@
             .social-links { gap: 20px; }
             .social-link { width: 70px; }
             .social-icon { font-size: 35px; }
+
+            /* Show mobile social links only in mobile menu */
+            .mobile-social-links {
+                display: block;
+                margin-top: 30px;
+            }
+            .mobile-social-links .social-links {
+                gap: 15px;
+            }
+            .mobile-social-links .social-link {
+                width: auto;
+                margin: 0 10px;
+            }
+            .mobile-social-links .social-icon {
+                font-size: 28px;
+            }
+            .mobile-social-links .social-name {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -486,6 +509,26 @@
                 <li><a href="#services">Services</a></li>
                 <li><a href="#portfolio">Portfolio</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <!-- Mobile Social Links (hidden on desktop) -->
+                <li class="mobile-social-links">
+                    <div class="social-links" style="justify-content: center; margin-top: 20px;">
+                        <a href="https://instagram.com/yourusername" class="social-link" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-instagram social-icon instagram"></i>
+                        </a>
+                        <a href="https://bsky.app/profile/yourhandle" class="social-link" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-cloud social-icon bluesky"></i>
+                        </a>
+                        <a href="https://twitter.com/yourhandle" class="social-link" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-twitter social-icon twitter"></i>
+                        </a>
+                        <a href="https://discord.gg/yourinvite" class="social-link" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-discord social-icon discord"></i>
+                        </a>
+                        <a href="https://github.com/yourusername" class="social-link" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-github social-icon github"></i>
+                        </a>
+                    </div>
+                </li>
             </ul>
             <button class="hamburger-menu" aria-label="Toggle Menu">
                 <i class="fas fa-bars"></i>
@@ -505,14 +548,14 @@
     <section id="about">
         <div class="section-content">
             <h2>About Us</h2>
-            <p>We're a team of creative people who love turning ideas into great digital experiences. Whether it’s design, tech, or both, we’re all about building things that actually help people and businesses.</p>
-            <p>From eye-catching logos to full branding and websites, we've worked with all kinds of companies big & small to help them get noticed online and reach their goals.</p>
+            <p>We are a creative team dedicated to delivering exceptional digital experiences. Our passion for design and technology drives us to create solutions that make a real difference for our clients.</p>
+            <p>With years of experience in the industry, we've helped businesses of all sizes establish their online presence and achieve their digital goals.</p>
         </div>
     </section>
 
     <section id="services">
         <div class="section-content">
-            <h2>What We Do</h2>
+            <h2>Our Services</h2>
             <div class="services-grid">
                 <div class="service-card web-design">
                     <a href="/web-design" class="card-link-overlay" aria-label="Web Design Service"></a>
@@ -628,7 +671,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Hamburger menu logic
             const hamburger = document.querySelector('.hamburger-menu');
             const menu = document.querySelector('.menu');
             const menuLinks = document.querySelectorAll('.menu a');
@@ -642,7 +684,6 @@
                 });
             }
 
-            // Close menu when a link is clicked
             menuLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     if (hamburger.classList.contains('active')) {
@@ -653,8 +694,6 @@
                 });
             });
 
-
-            // Smooth scrolling for anchor links (already exists)
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -667,7 +706,6 @@
                 });
             });
 
-            // Image loading fallback for background images (already exists)
             const sections = document.querySelectorAll('section[id]');
             const fallbackColors = {
                 'home': '#e3f2fd',
