@@ -4,9 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>More Than Pixels || Web & Graphic Design</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Professional web and graphic design services. We create beautiful, functional websites and branding.">
+    <meta name="keywords" content="web design, graphic design, branding, SEO, logo design">
+    <meta property="og:title" content="More Than Pixels || Web & Graphic Design">
+    <meta property="og:description" content="We create beautiful, functional websites that help your business grow.">
+    <meta property="og:image" content="https://i.imgur.com/SXHKi92.png">
+    <meta name="theme-color" content="#4a6bff">
+    
+    <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
         * {
             margin: 0;
@@ -26,6 +43,7 @@
             width: 100%;
         }
 
+        /* Prevent scrolling when mobile menu is open */
         body.nav-open {
             overflow: hidden;
         }
@@ -57,11 +75,18 @@
             color: #4a6bff;
         }
         
+        .logo img {
+            max-height: 40px;
+            width: auto;
+        }
+        
         .menu {
             display: flex;
             list-style: none;
             margin: 0 auto;
             padding: 0;
+            backdrop-filter: blur(5px);
+            transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
         
         .menu li {
@@ -77,8 +102,10 @@
             transition: color 0.3s;
         }
         
-        .menu li a:hover {
+        .menu li a:hover,
+        .menu li a:focus {
             color: #FF7F00;
+            outline: none;
         }
         
         .menu li a::after {
@@ -92,7 +119,8 @@
             transition: width 0.3s;
         }
         
-        .menu li a:hover::after {
+        .menu li a:hover::after,
+        .menu li a:focus::after {
             width: 100%;
         }
 
@@ -103,6 +131,7 @@
             border: none;
             cursor: pointer;
             z-index: 110;
+            color: #333;
         }
 
         .hamburger-menu .fa-times {
@@ -115,6 +144,24 @@
 
         .hamburger-menu.active .fa-times {
             display: block;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            pointer-events: all;
         }
 
         section {
@@ -214,13 +261,16 @@
             text-decoration: none;
             font-weight: 500;
             margin-top: 20px;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.2s;
             border: none;
             cursor: pointer;
         }
         
-        .btn:hover {
+        .btn:hover,
+        .btn:focus {
             background: #3a5bef;
+            transform: translateY(-2px);
+            outline: none;
         }
         
         .services-grid {
@@ -350,6 +400,28 @@
             transform: scale(1.1);
         }
 
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 127, 0, 0.9);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
         .social-links {
             display: flex;
             flex-wrap: wrap;
@@ -394,6 +466,29 @@
         .bluesky { color: #1185FE; }
         .discord { color: #5865F2; }
         .github { color: #333; }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4a6bff;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 99;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+        }
         
         footer {
             text-align: center;
@@ -416,12 +511,7 @@
         .bold {
             font-weight: 700;
         }
-
-        /* Mobile Social Links (hidden on desktop) */
-        .mobile-social-links {
-            display: none;
-        }
-
+        
         @media (max-width: 768px) {
             section {
                 background-attachment: scroll !important;
@@ -477,63 +567,25 @@
             .social-links { gap: 20px; }
             .social-link { width: 70px; }
             .social-icon { font-size: 35px; }
-
-            /* Show mobile social links only in mobile menu */
-            .mobile-social-links {
-                display: block;
-                margin-top: 30px;
-            }
-            .mobile-social-links .social-links {
-                gap: 15px;
-            }
-            .mobile-social-links .social-link {
-                width: auto;
-                margin: 0 10px;
-            }
-            .mobile-social-links .social-icon {
-                font-size: 28px;
-            }
-            .mobile-social-links .social-name {
-                display: none;
-            }
         }
     </style>
 </head>
 <body>
     <header>
         <nav>
-            <div class="logo"><img src="https://i.imgur.com/SXHKi92.png"></div>
+            <div class="logo"><img src="https://i.imgur.com/SXHKi92.png" alt="More Than Pixels Logo" loading="lazy"></div>
             <ul class="menu">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#services">Services</a></li>
                 <li><a href="#portfolio">Portfolio</a></li>
                 <li><a href="#contact">Contact</a></li>
-                <!-- Mobile Social Links (hidden on desktop) -->
-                <li class="mobile-social-links">
-                    <div class="social-links" style="justify-content: center; margin-top: 20px;">
-                        <a href="https://instagram.com/yourusername" class="social-link" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-instagram social-icon instagram"></i>
-                        </a>
-                        <a href="https://bsky.app/profile/yourhandle" class="social-link" target="_blank" rel="noopener noreferrer">
-                            <i class="fas fa-cloud social-icon bluesky"></i>
-                        </a>
-                        <a href="https://twitter.com/yourhandle" class="social-link" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-twitter social-icon twitter"></i>
-                        </a>
-                        <a href="https://discord.gg/yourinvite" class="social-link" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-discord social-icon discord"></i>
-                        </a>
-                        <a href="https://github.com/yourusername" class="social-link" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-github social-icon github"></i>
-                        </a>
-                    </div>
-                </li>
             </ul>
-            <button class="hamburger-menu" aria-label="Toggle Menu">
+            <button class="hamburger-menu" aria-label="Toggle Menu" aria-expanded="false">
                 <i class="fas fa-bars"></i>
                 <i class="fas fa-times"></i>
             </button>
+            <div class="menu-overlay"></div>
         </nav>
     </header>
 
@@ -548,19 +600,19 @@
     <section id="about">
         <div class="section-content">
             <h2>About Us</h2>
-            <p>We are a creative team dedicated to delivering exceptional digital experiences. Our passion for design and technology drives us to create solutions that make a real difference for our clients.</p>
-            <p>With years of experience in the industry, we've helped businesses of all sizes establish their online presence and achieve their digital goals.</p>
+            <p>We're a team of creative people who love turning ideas into great digital experiences. Whether it’s design, tech, or both, we’re all about building things that actually help people and businesses.</p>
+            <p>From eye-catching logos to full branding and websites, we've worked with all kinds of companies big & small to help them get noticed online and reach their goals.</p>
         </div>
     </section>
 
     <section id="services">
         <div class="section-content">
-            <h2>Our Services</h2>
+            <h2>What We Do</h2>
             <div class="services-grid">
                 <div class="service-card web-design">
                     <a href="/web-design" class="card-link-overlay" aria-label="Web Design Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3242/3242257.png" alt="Web Design" onerror="this.onerror=null;this.src='https://placehold.co/50x50/FF7F00/FFFFFF?text=Icon';">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3242/3242257.png" alt="Web Design" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/50x50/FF7F00/FFFFFF?text=Icon';">
                     </div>
                     <h3>Web Design</h3>
                     <p>Custom website designs that reflect your brand and engage your audience with intuitive user experiences.</p>
@@ -569,7 +621,7 @@
                 <div class="service-card web-dev">
                     <a href="/web-development" class="card-link-overlay" aria-label="Web Development Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1006/1006363.png" alt="Web Development" onerror="this.onerror=null;this.src='https://placehold.co/50x50/4a6bff/FFFFFF?text=Icon';">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1006/1006363.png" alt="Web Development" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/50x50/4a6bff/FFFFFF?text=Icon';">
                     </div>
                     <h3>Web Development</h3>
                     <p>Responsive, high-performance websites built with clean code and modern technologies.</p>
@@ -578,7 +630,7 @@
                 <div class="service-card seo">
                     <a href="/seo" class="card-link-overlay" aria-label="SEO Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2997/2997132.png" alt="SEO Optimization" onerror="this.onerror=null;this.src='https://placehold.co/50x50/2ECC71/FFFFFF?text=Icon';">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2997/2997132.png" alt="SEO Optimization" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/50x50/2ECC71/FFFFFF?text=Icon';">
                     </div>
                     <h3>SEO Optimization</h3>
                     <p>Comprehensive strategies to improve your search rankings and drive qualified traffic to your site.</p>
@@ -587,7 +639,7 @@
                 <div class="service-card graphic-design">
                     <a href="/graphic-design" class="card-link-overlay" aria-label="Graphic Design Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2779/2779775.png" alt="Graphic Design" onerror="this.onerror=null;this.src='https://placehold.co/50x50/E1306C/FFFFFF?text=Icon';">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2779/2779775.png" alt="Graphic Design" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/50x50/E1306C/FFFFFF?text=Icon';">
                     </div>
                     <h3>Graphic Design</h3>
                     <p>Visually stunning graphics, logos, and branding materials that make your business stand out.</p>
@@ -596,7 +648,7 @@
                 <div class="service-card logos">
                     <a href="/logo-design" class="card-link-overlay" aria-label="Logo Design Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="Logo Design" onerror="this.onerror=null;this.src='https://placehold.co/50x50/9B59B6/FFFFFF?text=Icon';">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="Logo Design" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/50x50/9B59B6/FFFFFF?text=Icon';">
                     </div>
                     <h3>Logo Design</h3>
                     <p>Unique and memorable logos that capture your brand's essence and make a lasting impression.</p>
@@ -605,7 +657,7 @@
                 <div class="service-card branding">
                     <a href="/branding" class="card-link-overlay" aria-label="Branding Service"></a>
                     <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3281/3281289.png" alt="Branding" onerror="this.onerror=null;this.src='https://placehold.co/50x50/3498DB/FFFFFF?text=Icon';">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3281/3281289.png" alt="Branding" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/50x50/3498DB/FFFFFF?text=Icon';">
                     </div>
                     <h3>Branding</h3>
                     <p>Complete brand identity packages including color palettes, typography, and visual guidelines.</p>
@@ -619,13 +671,25 @@
             <h2>Our Portfolio</h2>
             <div class="portfolio-grid">
                 <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Web Design Project" onerror="this.onerror=null;this.src='https://placehold.co/600x400/fce4ec/FFFFFF?text=Project+1';">
+                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Web Design Project" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3>E-Commerce Website</h3>
+                        <p>Web Design & Development</p>
+                    </div>
                 </div>
                 <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="App Development Project" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e3f2fd/FFFFFF?text=Project+2';">
+                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="App Development Project" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3>Mobile App UI</h3>
+                        <p>UI/UX Design</p>
+                    </div>
                 </div>
                 <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Branding Project" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e8f5e9/FFFFFF?text=Project+3';">
+                    <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Branding Project" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3>Brand Identity</h3>
+                        <p>Logo & Branding</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -665,35 +729,53 @@
         </div>
     </section>
 
+    <a href="#home" class="back-to-top" aria-label="Back to top">↑</a>
+
     <footer>
         <p><sup>&copy;</sup> 2025 <span class="bold">Alex Boldy</span>. All rights reserved.</p>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        try {
+            // Hamburger menu logic
             const hamburger = document.querySelector('.hamburger-menu');
             const menu = document.querySelector('.menu');
             const menuLinks = document.querySelectorAll('.menu a');
             const body = document.body;
+            const overlay = document.querySelector('.menu-overlay');
 
             if (hamburger && menu) {
                 hamburger.addEventListener('click', () => {
-                    hamburger.classList.toggle('active');
+                    const isOpen = hamburger.classList.toggle('active');
                     menu.classList.toggle('active');
+                    overlay.classList.toggle('active');
                     body.classList.toggle('nav-open');
+                    hamburger.setAttribute('aria-expanded', isOpen);
+                });
+
+                overlay.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    menu.classList.remove('active');
+                    overlay.classList.remove('active');
+                    body.classList.remove('nav-open');
+                    hamburger.setAttribute('aria-expanded', 'false');
                 });
             }
 
+            // Close menu when a link is clicked
             menuLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     if (hamburger.classList.contains('active')) {
                         hamburger.classList.remove('active');
                         menu.classList.remove('active');
+                        overlay.classList.remove('active');
                         body.classList.remove('nav-open');
+                        hamburger.setAttribute('aria-expanded', 'false');
                     }
                 });
             });
 
+            // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -706,6 +788,13 @@
                 });
             });
 
+            // Back to top button
+            const backToTop = document.querySelector('.back-to-top');
+            window.addEventListener('scroll', () => {
+                backToTop.classList.toggle('visible', window.scrollY > 300);
+            });
+
+            // Image loading fallback for background images
             const sections = document.querySelectorAll('section[id]');
             const fallbackColors = {
                 'home': '#e3f2fd',
@@ -731,7 +820,15 @@
                     }
                 }
             });
-        });
+
+        } catch (error) {
+            console.error("Error:", error);
+            // Optional: Show user-friendly error message
+            const errorBanner = document.createElement('div');
+            errorBanner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#ff4444;color:white;padding:10px;text-align:center;z-index:9999';
+            errorBanner.textContent = 'An error occurred. Please refresh the page.';
+            document.body.appendChild(errorBanner);
+        }
     </script>
 </body>
 </html>
