@@ -118,6 +118,25 @@
             display: block;
         }
 
+        /* Mobile Social Links */
+        .mobile-social-links {
+            display: none;
+            margin-top: 30px;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .mobile-social-links a {
+            font-size: 24px;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        .mobile-social-links a:hover {
+            color: #FF7F00;
+        }
+
         section {
             padding: 100px 0;
             min-height: 100vh;
@@ -455,6 +474,7 @@
                 justify-content: center;
                 align-items: center;
                 transition: left 0.3s ease-in-out;
+                padding-bottom: 30px;
             }
 
             .menu.active {
@@ -469,6 +489,10 @@
                 font-size: 24px;
             }
             
+            .mobile-social-links {
+                display: flex;
+            }
+            
             .services-grid { grid-template-columns: 1fr; }
             .social-links { gap: 20px; }
             .social-link { width: 70px; }
@@ -479,15 +503,34 @@
 <body>
     <header>
         <nav>
-            <div class="logo"><img src="https://i.imgur.com/SXHKi92.png"></div>
+            <div class="logo"><img src="https://i.imgur.com/SXHKi92.png" alt="More Than Pixels logo"></div>
             <ul class="menu">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#services">Services</a></li>
                 <li><a href="#portfolio">Portfolio</a></li>
                 <li><a href="#contact">Contact</a></li>
+                
+                <!-- Mobile Social Links -->
+                <div class="mobile-social-links">
+                    <a href="https://instagram.com/yourusername" aria-label="Instagram">
+                        <i class="fab fa-instagram instagram"></i>
+                    </a>
+                    <a href="https://bsky.app/profile/yourhandle" aria-label="Bluesky">
+                        <i class="fas fa-cloud bluesky"></i>
+                    </a>
+                    <a href="https://twitter.com/yourhandle" aria-label="Twitter">
+                        <i class="fab fa-twitter twitter"></i>
+                    </a>
+                    <a href="https://discord.gg/yourinvite" aria-label="Discord">
+                        <i class="fab fa-discord discord"></i>
+                    </a>
+                    <a href="https://github.com/yourusername" aria-label="GitHub">
+                        <i class="fab fa-github github"></i>
+                    </a>
+                </div>
             </ul>
-            <button class="hamburger-menu" aria-label="Toggle Menu">
+            <button class="hamburger-menu" aria-label="Toggle Menu" aria-expanded="false">
                 <i class="fas fa-bars"></i>
                 <i class="fas fa-times"></i>
             </button>
@@ -631,30 +674,31 @@
             // Hamburger menu logic
             const hamburger = document.querySelector('.hamburger-menu');
             const menu = document.querySelector('.menu');
-            const menuLinks = document.querySelectorAll('.menu a');
+            const menuLinks = document.querySelectorAll('.menu a, .mobile-social-links a');
             const body = document.body;
 
             if (hamburger && menu) {
                 hamburger.addEventListener('click', () => {
-                    hamburger.classList.toggle('active');
+                    const isExpanded = hamburger.classList.toggle('active');
                     menu.classList.toggle('active');
                     body.classList.toggle('nav-open');
+                    hamburger.setAttribute('aria-expanded', isExpanded);
                 });
             }
 
-            // Close menu when a link is clicked
+            // Close menu when a link is clicked (including social links)
             menuLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     if (hamburger.classList.contains('active')) {
                         hamburger.classList.remove('active');
                         menu.classList.remove('active');
                         body.classList.remove('nav-open');
+                        hamburger.setAttribute('aria-expanded', 'false');
                     }
                 });
             });
 
-
-            // Smooth scrolling for anchor links (already exists)
+            // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -667,7 +711,7 @@
                 });
             });
 
-            // Image loading fallback for background images (already exists)
+            // Image loading fallback for background images
             const sections = document.querySelectorAll('section[id]');
             const fallbackColors = {
                 'home': '#e3f2fd',
