@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Made By Pixels -- Web & Graphic Design</title>
+    <title>Modern One-Page Website</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -150,7 +150,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             width: 75%;
             max-width: 1200px;
-            text-align: center;
         }
         
         h1, h2, h3 {
@@ -193,36 +192,128 @@
             background: #3a5bef;
         }
         
+        /* Services Section Styles */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
+            margin-top: 40px;
         }
-        
+
         .service-card {
             background: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-top: 4px solid transparent;
         }
-        
+
         .service-card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
         }
-        
+
+        .service-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .service-logo img {
+            max-width: 50px;
+            max-height: 50px;
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover .service-logo img {
+            transform: scale(1.1);
+        }
+
         .service-card h3 {
             font-size: 22px;
             margin-bottom: 15px;
+            color: #333;
+            position: relative;
+            display: inline-block;
         }
-        
-        .service-icon {
-            font-size: 50px;
-            margin-bottom: 20px;
-            color: #4a6bff;
+
+        .service-card h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: #FF7F00;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: width 0.3s;
         }
-        
+
+        .service-card:hover h3::after {
+            width: 60px;
+        }
+
+        .service-card p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* Service-specific branding */
+        .web-design {
+            border-top-color: #FF7F00;
+        }
+        .web-design .service-logo {
+            background: linear-gradient(135deg, #FF7F00 0%, #FFAA00 100%);
+        }
+
+        .web-dev {
+            border-top-color: #4a6bff;
+        }
+        .web-dev .service-logo {
+            background: linear-gradient(135deg, #4a6bff 0%, #6a8bff 100%);
+        }
+
+        .seo {
+            border-top-color: #2ECC71;
+        }
+        .seo .service-logo {
+            background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
+        }
+
+        .graphic-design {
+            border-top-color: #E1306C;
+        }
+        .graphic-design .service-logo {
+            background: linear-gradient(135deg, #E1306C 0%, #FD1D1D 100%);
+        }
+
+        .logos {
+            border-top-color: #9B59B6;
+        }
+        .logos .service-logo {
+            background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%);
+        }
+
+        .branding {
+            border-top-color: #3498DB;
+        }
+        .branding .service-logo {
+            background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%);
+        }
+
+        /* Portfolio Section */
         .portfolio-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -246,7 +337,8 @@
         .portfolio-item:hover img {
             transform: scale(1.1);
         }
-        
+
+        /* Contact Section */
         .social-links {
             display: flex;
             flex-wrap: wrap;
@@ -407,33 +499,52 @@
         <div class="section-content">
             <h2>Our Services</h2>
             <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-laptop-code"></i>
+                <div class="service-card web-design">
+                    <div class="service-logo">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3242/3242257.png" alt="Web Design">
                     </div>
                     <h3>Web Design</h3>
                     <p>Custom website designs that reflect your brand and engage your audience with intuitive user experiences.</p>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-code"></i>
+                
+                <div class="service-card web-dev">
+                    <div class="service-logo">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1006/1006363.png" alt="Web Development">
                     </div>
                     <h3>Web Development</h3>
                     <p>Responsive, high-performance websites built with clean code and modern technologies.</p>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-search"></i>
+                
+                <div class="service-card seo">
+                    <div class="service-logo">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2997/2997132.png" alt="SEO Optimization">
                     </div>
                     <h3>SEO Optimization</h3>
                     <p>Comprehensive strategies to improve your search rankings and drive qualified traffic to your site.</p>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-paint-brush"></i>
+                
+                <div class="service-card graphic-design">
+                    <div class="service-logo">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2779/2779775.png" alt="Graphic Design">
                     </div>
                     <h3>Graphic Design</h3>
                     <p>Visually stunning graphics, logos, and branding materials that make your business stand out.</p>
+                </div>
+
+                <div class="service-card logos">
+                    <div class="service-logo">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="Logo Design">
+                    </div>
+                    <h3>Logo Design</h3>
+                    <p>Unique and memorable logos that capture your brand's essence and make a lasting impression.</p>
+                </div>
+
+                <div class="service-card branding">
+                    <div class="service-logo">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3281/3281289.png" alt="Branding">
+                    </div>
+                    <h3>Branding</h3>
+                    <p>Complete brand identity packages including color palettes, typography, and visual guidelines.</p>
                 </div>
             </div>
         </div>
@@ -499,7 +610,6 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
