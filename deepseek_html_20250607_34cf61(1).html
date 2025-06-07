@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern One-Page Website</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 5%;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            position: absolute;
+            left: 5%;
+            font-size: 24px;
+            font-weight: 700;
+            color: #4a6bff;
+        }
+        
+        .menu {
+            display: flex;
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        .menu li {
+            margin: 0 15px;
+        }
+        
+        .menu li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.3s;
+        }
+        
+        .menu li a:hover {
+            color: #FF7F00;
+        }
+        
+        .menu li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #FF7F00;
+            transition: width 0.3s;
+        }
+        
+        .menu li a:hover::after {
+            width: 100%;
+        }
+
+        section {
+            padding: 100px 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        #home {
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+                        url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        #about {
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+                        url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        #services {
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+                        url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        #portfolio {
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+                        url('https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        #contact {
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+                        url('https://images.unsplash.com/photo-1528747045269-390fe33c19f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        .section-content {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 75%;
+            max-width: 1200px;
+            text-align: center;
+        }
+        
+        h1, h2, h3 {
+            color: #FF7F00;
+        }
+        
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        h2 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: 400;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #4a6bff;
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 20px;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #3a5bef;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .service-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        .service-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #4a6bff;
+        }
+        
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .portfolio-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            height: 250px;
+        }
+        
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .portfolio-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .social-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.3s, color 0.3s;
+            width: 80px;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px);
+            color: #FF7F00;
+        }
+
+        .social-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+
+        .social-link:hover .social-icon {
+            color: #FF7F00;
+        }
+
+        .social-name {
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Platform-specific colors */
+        .instagram { color: #E1306C; }
+        .twitter { color: #1DA1F2; }
+        .bluesky { color: #1185FE; }
+        .discord { color: #5865F2; }
+        .github { color: #333; }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: #fff;
+            width: 100%;
+        }
+        
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        sup {
+            font-size: 0.8em;
+            vertical-align: super;
+        }
+        
+        .bold {
+            font-weight: 700;
+        }
+        
+        @media (max-width: 768px) {
+            section {
+                background-attachment: scroll !important;
+            }
+            
+            .section-content {
+                padding: 30px;
+                width: 85%;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+            
+            h2 {
+                font-size: 28px;
+            }
+            
+            nav {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .logo {
+                position: relative;
+                left: auto;
+                margin-bottom: 15px;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .menu {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .menu li {
+                margin: 10px 0;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .social-links {
+                gap: 20px;
+            }
+
+            .social-link {
+                width: 70px;
+            }
+
+            .social-icon {
+                font-size: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">LOGO</div>
+            <ul class="menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home">
+        <div class="section-content">
+            <h1>Welcome to Our Website</h1>
+            <p>We create beautiful, functional websites that help your business grow.</p>
+            <a href="#contact" class="btn">Get Started</a>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="section-content">
+            <h2>About Us</h2>
+            <p>We are a creative team dedicated to delivering exceptional digital experiences. Our passion for design and technology drives us to create solutions that make a real difference for our clients.</p>
+            <p>With years of experience in the industry, we've helped businesses of all sizes establish their online presence and achieve their digital goals.</p>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="section-content">
+            <h2>Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>Web Design</h3>
+                    <p>Custom website designs that reflect your brand and engage your audience with intuitive user experiences.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Web Development</h3>
+                    <p>Responsive, high-performance websites built with clean code and modern technologies.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>SEO Optimization</h3>
+                    <p>Comprehensive strategies to improve your search rankings and drive qualified traffic to your site.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3>Graphic Design</h3>
+                    <p>Visually stunning graphics, logos, and branding materials that make your business stand out.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio">
+        <div class="section-content">
+            <h2>Our Portfolio</h2>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Web Design Project">
+                </div>
+                <div class="portfolio-item">
+                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="App Development Project">
+                </div>
+                <div class="portfolio-item">
+                    <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Branding Project">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="section-content">
+            <h2>Contact Us</h2>
+            <p>Connect with us on our social platforms:</p>
+            
+            <div class="social-links">
+                <a href="https://instagram.com/yourusername" class="social-link" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-instagram social-icon instagram"></i>
+                    <span class="social-name">Instagram</span>
+                </a>
+                
+                <a href="https://bsky.app/profile/yourhandle" class="social-link" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-cloud social-icon bluesky"></i>
+                    <span class="social-name">Bluesky</span>
+                </a>
+                
+                <a href="https://twitter.com/yourhandle" class="social-link" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-twitter social-icon twitter"></i>
+                    <span class="social-name">Twitter</span>
+                </a>
+                
+                <a href="https://discord.gg/yourinvite" class="social-link" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-discord social-icon discord"></i>
+                    <span class="social-name">Discord</span>
+                </a>
+                
+                <a href="https://github.com/yourusername" class="social-link" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-github social-icon github"></i>
+                    <span class="social-name">GitHub</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p><sup>©</sup> 2025 <span class="bold">Alex Boldy</span>. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Image loading fallback
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const fallbackColors = {
+                'home': '#e3f2fd',
+                'about': '#e8f5e9',
+                'services': '#fff3e0',
+                'portfolio': '#fce4ec',
+                'contact': '#f3e5f5'
+            };
+
+            sections.forEach(section => {
+                const img = new Image();
+                const bgImage = window.getComputedStyle(section).backgroundImage;
+                
+                if (bgImage.includes('url')) {
+                    img.src = bgImage.replace(/.*url\(["']?([^"']*)["']?\).*/, '$1');
+                    
+                    img.onerror = function() {
+                        section.style.background = fallbackColors[section.id] || '#f5f5f5';
+                    };
+                }
+            });
+        });
+    </script>
+</body>
+</html>
