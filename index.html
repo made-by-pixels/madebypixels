@@ -346,28 +346,99 @@
         .branding { border-top-color: #3498DB; }
         .branding .service-logo { background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%); }
         
+        /* Flip Card Portfolio Styles */
         .portfolio-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
+            perspective: 1000px;
         }
         
         .portfolio-item {
             position: relative;
-            overflow: hidden;
-            border-radius: 10px;
-            height: 250px;
+            width: 100%;
+            height: 350px;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+            cursor: pointer;
         }
         
-        .portfolio-item img {
+        .portfolio-item.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .portfolio-front, .portfolio-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .portfolio-front {
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .portfolio-front img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
         
-        .portfolio-item:hover img {
-            transform: scale(1.1);
+        .portfolio-item:hover .portfolio-front img {
+            transform: scale(1.05);
+        }
+        
+        .portfolio-back {
+            background: linear-gradient(135deg, #4a6bff 0%, #FF7F00 100%);
+            color: white;
+            padding: 30px;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .portfolio-back h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        .portfolio-back p {
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .portfolio-back .btn {
+            background: white;
+            color: #4a6bff;
+            align-self: flex-start;
+        }
+        
+        .portfolio-back .btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .portfolio-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .portfolio-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
         }
 
         .social-links {
@@ -494,6 +565,8 @@
             }
             
             .services-grid { grid-template-columns: 1fr; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .portfolio-item { height: 300px; }
             .social-links { gap: 20px; }
             .social-link { width: 70px; }
             .social-icon { font-size: 35px; }
@@ -618,14 +691,55 @@
         <div class="section-content">
             <h2>Our Portfolio</h2>
             <div class="portfolio-grid">
-                <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Web Design Project" onerror="this.onerror=null;this.src='https://placehold.co/600x400/fce4ec/FFFFFF?text=Project+1';">
+                <!-- Project 1 -->
+                <div class="portfolio-item" tabindex="0">
+                    <div class="portfolio-front">
+                        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="E-commerce Website">
+                    </div>
+                    <div class="portfolio-back">
+                        <h3>E-commerce Website</h3>
+                        <div class="portfolio-tags">
+                            <span class="portfolio-tag">Web Design</span>
+                            <span class="portfolio-tag">E-commerce</span>
+                            <span class="portfolio-tag">UI/UX</span>
+                        </div>
+                        <p>A fully responsive online store with custom product pages, shopping cart, and secure checkout system.</p>
+                        <a href="#" class="btn">View Project</a>
+                    </div>
                 </div>
-                <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="App Development Project" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e3f2fd/FFFFFF?text=Project+2';">
+                
+                <!-- Project 2 -->
+                <div class="portfolio-item" tabindex="0">
+                    <div class="portfolio-front">
+                        <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Mobile App UI">
+                    </div>
+                    <div class="portfolio-back">
+                        <h3>Fitness Mobile App</h3>
+                        <div class="portfolio-tags">
+                            <span class="portfolio-tag">App Design</span>
+                            <span class="portfolio-tag">iOS/Android</span>
+                            <span class="portfolio-tag">UI/UX</span>
+                        </div>
+                        <p>A health and fitness tracking app with personalized workout plans, nutrition tracking, and progress analytics.</p>
+                        <a href="#" class="btn">View Project</a>
+                    </div>
                 </div>
-                <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Branding Project" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e8f5e9/FFFFFF?text=Project+3';">
+                
+                <!-- Project 3 -->
+                <div class="portfolio-item" tabindex="0">
+                    <div class="portfolio-front">
+                        <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Brand Identity">
+                    </div>
+                    <div class="portfolio-back">
+                        <h3>Corporate Branding</h3>
+                        <div class="portfolio-tags">
+                            <span class="portfolio-tag">Branding</span>
+                            <span class="portfolio-tag">Logo Design</span>
+                            <span class="portfolio-tag">Print</span>
+                        </div>
+                        <p>Complete brand identity for a tech startup including logo, color palette, typography, and marketing materials.</p>
+                        <a href="#" class="btn">View Project</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -707,6 +821,39 @@
                         targetElement.scrollIntoView({
                             behavior: 'smooth'
                         });
+                    }
+                });
+            });
+
+            // Flip card functionality
+            const portfolioItems = document.querySelectorAll('.portfolio-item');
+            
+            portfolioItems.forEach(item => {
+                // Click event for mobile
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        this.classList.toggle('flipped');
+                    }
+                });
+                
+                // Hover event for desktop
+                item.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 768) {
+                        this.classList.add('flipped');
+                    }
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 768) {
+                        this.classList.remove('flipped');
+                    }
+                });
+                
+                // Keyboard accessibility
+                item.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.classList.toggle('flipped');
                     }
                 });
             });
