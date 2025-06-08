@@ -27,7 +27,7 @@
         }
 
         /* Prevent scrolling when mobile menu is open */
-        body.nav-open {
+        body.nav-open, body.modal-open {
             overflow: hidden;
         }
         
@@ -346,99 +346,143 @@
         .branding { border-top-color: #3498DB; }
         .branding .service-logo { background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%); }
         
-        /* Flip Card Portfolio Styles */
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            perspective: 1000px;
-        }
-        
-        .portfolio-item {
+        /* Hexagonal Hive Gallery Styles */
+        .hive-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 0 auto;
+            max-width: 1000px;
             position: relative;
-            width: 100%;
-            height: 350px;
-            transform-style: preserve-3d;
-            transition: transform 0.8s;
+        }
+
+        .hive-row {
+            display: flex;
+            margin-bottom: -26px;
+        }
+
+        .hive-row:nth-child(even) {
+            margin-left: 86px;
+        }
+
+        .hexagon {
+            width: 150px;
+            height: 173px;
+            margin: 0 10px;
+            position: relative;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            transition: all 0.3s ease;
             cursor: pointer;
         }
-        
-        .portfolio-item.flipped {
-            transform: rotateY(180deg);
+
+        .hexagon:hover {
+            transform: scale(1.05);
+            z-index: 10;
         }
-        
-        .portfolio-front, .portfolio-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .portfolio-front {
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .portfolio-front img {
+
+        .hexagon img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s;
         }
-        
-        .portfolio-item:hover .portfolio-front img {
-            transform: scale(1.05);
-        }
-        
-        .portfolio-back {
-            background: linear-gradient(135deg, #4a6bff 0%, #FF7F00 100%);
-            color: white;
-            padding: 30px;
-            transform: rotateY(180deg);
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
-        
-        .portfolio-back h3 {
-            color: white;
-            margin-bottom: 15px;
-            font-size: 22px;
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
-        
-        .portfolio-back p {
-            margin-bottom: 20px;
-            color: rgba(255, 255, 255, 0.9);
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
         }
-        
-        .portfolio-back .btn {
-            background: white;
-            color: #4a6bff;
-            align-self: flex-start;
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 80vh;
+            display: block;
+            margin: 0 auto;
+            border-radius: 5px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
         }
-        
-        .portfolio-back .btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-        }
-        
-        .portfolio-tags {
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            z-index: 10;
         }
-        
-        .portfolio-tag {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
+
+        .modal-nav button {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 20px;
+        }
+
+        .modal-nav button:hover {
+            background: rgba(255, 255, 255, 0.7);
+            color: #333;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.7);
+            color: #333;
+        }
+
+        .modal-caption {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            margin: 0 auto;
+            max-width: 80%;
         }
 
         .social-links {
@@ -565,11 +609,36 @@
             }
             
             .services-grid { grid-template-columns: 1fr; }
-            .portfolio-grid { grid-template-columns: 1fr; }
-            .portfolio-item { height: 300px; }
+            
+            /* Hexagon adjustments for mobile */
+            .hive-row {
+                margin-bottom: -20px;
+            }
+
+            .hive-row:nth-child(even) {
+                margin-left: 65px;
+            }
+
+            .hexagon {
+                width: 100px;
+                height: 115px;
+                margin: 0 5px;
+            }
+            
             .social-links { gap: 20px; }
             .social-link { width: 70px; }
             .social-icon { font-size: 35px; }
+        }
+
+        @media (max-width: 480px) {
+            .hive-row:nth-child(even) {
+                margin-left: 50px;
+            }
+
+            .hexagon {
+                width: 80px;
+                height: 92px;
+            }
         }
     </style>
 </head>
@@ -690,60 +759,61 @@
     <section id="portfolio">
         <div class="section-content">
             <h2>Our Portfolio</h2>
-            <div class="portfolio-grid">
-                <!-- Project 1 -->
-                <div class="portfolio-item" tabindex="0">
-                    <div class="portfolio-front">
+            <div class="hive-gallery">
+                <!-- Row 1 -->
+                <div class="hive-row">
+                    <div class="hexagon" data-index="0">
                         <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="E-commerce Website">
                     </div>
-                    <div class="portfolio-back">
-                        <h3>E-commerce Website</h3>
-                        <div class="portfolio-tags">
-                            <span class="portfolio-tag">Web Design</span>
-                            <span class="portfolio-tag">E-commerce</span>
-                            <span class="portfolio-tag">UI/UX</span>
-                        </div>
-                        <p>A fully responsive online store with custom product pages, shopping cart, and secure checkout system.</p>
-                        <a href="#" class="btn">View Project</a>
-                    </div>
-                </div>
-                
-                <!-- Project 2 -->
-                <div class="portfolio-item" tabindex="0">
-                    <div class="portfolio-front">
+                    <div class="hexagon" data-index="1">
                         <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Mobile App UI">
                     </div>
-                    <div class="portfolio-back">
-                        <h3>Fitness Mobile App</h3>
-                        <div class="portfolio-tags">
-                            <span class="portfolio-tag">App Design</span>
-                            <span class="portfolio-tag">iOS/Android</span>
-                            <span class="portfolio-tag">UI/UX</span>
-                        </div>
-                        <p>A health and fitness tracking app with personalized workout plans, nutrition tracking, and progress analytics.</p>
-                        <a href="#" class="btn">View Project</a>
+                    <div class="hexagon" data-index="2">
+                        <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Brand Identity">
                     </div>
                 </div>
                 
-                <!-- Project 3 -->
-                <div class="portfolio-item" tabindex="0">
-                    <div class="portfolio-front">
-                        <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Brand Identity">
+                <!-- Row 2 -->
+                <div class="hive-row">
+                    <div class="hexagon" data-index="3">
+                        <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Web Design">
                     </div>
-                    <div class="portfolio-back">
-                        <h3>Corporate Branding</h3>
-                        <div class="portfolio-tags">
-                            <span class="portfolio-tag">Branding</span>
-                            <span class="portfolio-tag">Logo Design</span>
-                            <span class="portfolio-tag">Print</span>
-                        </div>
-                        <p>Complete brand identity for a tech startup including logo, color palette, typography, and marketing materials.</p>
-                        <a href="#" class="btn">View Project</a>
+                    <div class="hexagon" data-index="4">
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Team Project">
+                    </div>
+                    <div class="hexagon" data-index="5">
+                        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Development Work">
+                    </div>
+                </div>
+                
+                <!-- Row 3 -->
+                <div class="hive-row">
+                    <div class="hexagon" data-index="6">
+                        <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Creative Design">
+                    </div>
+                    <div class="hexagon" data-index="7">
+                        <img src="https://images.unsplash.com/photo-1528747045269-390fe33c19f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Marketing Materials">
+                    </div>
+                    <div class="hexagon" data-index="8">
+                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="UX Research">
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Modal for image viewing -->
+    <div class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close Modal">&times;</button>
+            <img src="" alt="" id="modal-image">
+            <div class="modal-caption" id="modal-caption"></div>
+            <div class="modal-nav">
+                <button class="modal-prev" aria-label="Previous Image">&lt;</button>
+                <button class="modal-next" aria-label="Next Image">&gt;</button>
+            </div>
+        </div>
+    </div>
 
     <section id="contact">
         <div class="section-content">
@@ -825,37 +895,84 @@
                 });
             });
 
-            // Flip card functionality
-            const portfolioItems = document.querySelectorAll('.portfolio-item');
+            // Hexagon Gallery Modal Functionality
+            const modal = document.querySelector('.modal-overlay');
+            const modalImg = document.getElementById('modal-image');
+            const modalCaption = document.getElementById('modal-caption');
+            const closeBtn = document.querySelector('.modal-close');
+            const prevBtn = document.querySelector('.modal-prev');
+            const nextBtn = document.querySelector('.modal-next');
+            const hexagons = document.querySelectorAll('.hexagon');
             
-            portfolioItems.forEach(item => {
-                // Click event for mobile
-                item.addEventListener('click', function() {
-                    if (window.innerWidth <= 768) {
-                        this.classList.toggle('flipped');
-                    }
+            // Create array of all gallery images with their data
+            const galleryItems = Array.from(hexagons).map(hexagon => {
+                return {
+                    img: hexagon.querySelector('img').src,
+                    alt: hexagon.querySelector('img').alt,
+                    index: parseInt(hexagon.getAttribute('data-index'))
+                };
+            });
+            
+            let currentIndex = 0;
+            
+            // Open modal with clicked image
+            hexagons.forEach(hexagon => {
+                hexagon.addEventListener('click', function() {
+                    currentIndex = parseInt(this.getAttribute('data-index'));
+                    updateModal(currentIndex);
+                    modal.classList.add('active');
+                    body.classList.add('modal-open');
                 });
-                
-                // Hover event for desktop
-                item.addEventListener('mouseenter', function() {
-                    if (window.innerWidth > 768) {
-                        this.classList.add('flipped');
+            });
+            
+            // Close modal
+            closeBtn.addEventListener('click', function() {
+                modal.classList.remove('active');
+                body.classList.remove('modal-open');
+            });
+            
+            // Previous image
+            prevBtn.addEventListener('click', function() {
+                currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+                updateModal(currentIndex);
+            });
+            
+            // Next image
+            nextBtn.addEventListener('click', function() {
+                currentIndex = (currentIndex + 1) % galleryItems.length;
+                updateModal(currentIndex);
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (modal.classList.contains('active')) {
+                    if (e.key === 'Escape') {
+                        modal.classList.remove('active');
+                        body.classList.remove('modal-open');
+                    } else if (e.key === 'ArrowLeft') {
+                        currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+                        updateModal(currentIndex);
+                    } else if (e.key === 'ArrowRight') {
+                        currentIndex = (currentIndex + 1) % galleryItems.length;
+                        updateModal(currentIndex);
                     }
-                });
-                
-                item.addEventListener('mouseleave', function() {
-                    if (window.innerWidth > 768) {
-                        this.classList.remove('flipped');
-                    }
-                });
-                
-                // Keyboard accessibility
-                item.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        this.classList.toggle('flipped');
-                    }
-                });
+                }
+            });
+            
+            // Update modal content
+            function updateModal(index) {
+                const item = galleryItems[index];
+                modalImg.src = item.img;
+                modalImg.alt = item.alt;
+                modalCaption.textContent = item.alt;
+            }
+            
+            // Close modal when clicking outside image
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    body.classList.remove('modal-open');
+                }
             });
 
             // Image loading fallback for background images
