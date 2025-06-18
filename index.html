@@ -1,1004 +1,466 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>More Than Pixels || Web & Graphic Design</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>morethanpixels - Design Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+        /* CSS Variables for Theming */
+        :root {
+            --bg-gradient: linear-gradient(120deg, #f0f3ff 0%, #d9e7ff 100%);
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-accent: #8A2BE2;
+            --header-bg: rgba(255, 255, 255, 0.5);
+            --card-bg: rgba(255, 255, 255, 0.3);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --blob1-bg: rgba(138, 43, 226, 0.2);
+            --blob2-bg: rgba(0, 123, 255, 0.2);
+            --button-primary-bg: #1a202c;
+            --button-primary-hover: #8A2BE2;
         }
-        
-        html {
-            scroll-behavior: smooth;
+
+        .dark {
+            --bg-gradient: linear-gradient(120deg, #0f172a 0%, #1e293b 100%);
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-accent: #a78bfa;
+            --header-bg: rgba(15, 23, 42, 0.5);
+            --card-bg: rgba(30, 41, 59, 0.3);
+            --card-border: rgba(51, 65, 85, 0.2);
+            --blob1-bg: rgba(167, 139, 250, 0.15);
+            --blob2-bg: rgba(59, 130, 246, 0.15);
+            --button-primary-bg: #e2e8f0;
+            --button-primary-hover: #a78bfa;
         }
 
         body {
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
             overflow-x: hidden;
-            width: 100%;
+            position: relative;
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
-        /* Prevent scrolling when mobile menu is open */
-        body.nav-open, body.modal-open {
-            overflow: hidden;
-        }
-        
-        header {
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            width: 100%;
-            z-index: 100;
-        }
-        
-        nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px 5%;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-        }
-        
-        .logo {
-            position: absolute;
-            left: 5%;
-            font-size: 24px;
-            font-weight: 700;
-            color: #4a6bff;
-        }
-        
-        .menu {
-            display: flex;
-            list-style: none;
-            margin: 0 auto;
-            padding: 0;
-        }
-        
-        .menu li {
-            margin: 0 15px;
-        }
-        
-        .menu li a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            padding: 8px 0;
-            position: relative;
-            transition: color 0.3s;
-        }
-        
-        .menu li a:hover {
-            color: #FF7F00;
-        }
-        
-        .menu li a::after {
+        /* Decorative Background Blobs */
+        body::before, body::after {
             content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: #FF7F00;
-            transition: width 0.3s;
-        }
-        
-        .menu li a:hover::after {
-            width: 100%;
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            transition: background 0.5s ease;
         }
 
-        .hamburger-menu {
-            display: none;
-            font-size: 24px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 110;
+        body::before {
+            width: 350px;
+            height: 350px;
+            background: var(--blob1-bg);
+            top: -100px;
+            left: -100px;
+        }
+        
+        body::after {
+            width: 400px;
+            height: 400px;
+            background: var(--blob2-bg);
+            bottom: -150px;
+            right: -150px;
+            animation: moveBlob 15s infinite alternate;
         }
 
-        .hamburger-menu .fa-times {
-            display: none;
+        @keyframes moveBlob {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(50px, -50px) scale(1.1); }
+        }
+        
+        .accent-color-text { color: var(--text-accent); }
+        .accent-border { border-color: var(--text-accent); }
+        .accent-bg-hover:hover { background-color: var(--button-primary-hover); }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        .dark ::-webkit-scrollbar-track, ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
+        .dark ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb:hover, ::-webkit-scrollbar-thumb:hover { background: var(--text-accent); }
+
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--card-border);
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            transition: background 0.5s ease, border-color 0.5s ease;
+        }
+        .dark .glass-card {
+             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
         }
 
-        .hamburger-menu.active .fa-bars {
-            display: none;
+        .header-glass {
+            background: var(--header-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--card-border);
+            transition: background 0.5s ease, border-color 0.5s ease;
         }
 
-        .hamburger-menu.active .fa-times {
-            display: block;
-        }
-
-        /* Mobile Social Links */
-        .mobile-social-links {
-            display: none;
-            margin-top: 30px;
-            justify-content: center;
-            gap: 20px;
-            width: 100%;
-        }
-
-        .mobile-social-links a {
-            font-size: 24px;
-            color: #333;
-            transition: color 0.3s;
-        }
-
-        .mobile-social-links a:hover {
-            color: #FF7F00;
-        }
-
-        section {
-            padding: 100px 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            width: 100%;
-            justify-content: center;
-        }
-        
-        #home {
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
-                        url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        
-        #about {
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
-                        url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        
-        #services {
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
-                        url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        
-        #portfolio {
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
-                        url('https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        
-        #contact {
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
-                        url('https://images.unsplash.com/photo-1528747045269-390fe33c19f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        
-        .section-content {
-            position: relative;
-            z-index: 2;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 50px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            width: 75%;
-            max-width: 1200px;
-        }
-        
-        h1, h2, h3 {
-            color: #FF7F00;
-        }
-        
-        h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        
-        h2 {
-            font-size: 36px;
-            margin-bottom: 30px;
-            font-weight: 600;
-        }
-        
-        p {
-            margin-bottom: 20px;
-            font-size: 16px;
-            font-weight: 400;
-        }
-        
-        .btn {
-            display: inline-block;
-            background: #4a6bff;
-            color: #fff;
-            padding: 12px 30px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 500;
-            margin-top: 20px;
-            transition: background 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn:hover {
-            background: #3a5bef;
-        }
-        
-        .services-grid {
+        .portfolio-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         }
 
-        .service-card {
-            background: #fff;
-            padding: 40px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            border-top: 4px solid transparent;
+        @media (min-width: 1024px) {
+            .portfolio-grid { grid-template-columns: repeat(4, 1fr); }
+            .grid-item-span-2 { grid-column: span 2; }
+            .grid-item-row-span-2 { grid-row: span 2; }
         }
 
-        .card-link-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            cursor: pointer;
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-        }
-
-        .service-logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            position: relative;
-            z-index: 3;
-        }
-
-        .service-logo img {
-            max-width: 50px;
-            max-height: 50px;
-            transition: transform 0.3s;
-        }
-
-        .service-card:hover .service-logo img {
-            transform: scale(1.1);
-        }
-
-        .service-card h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            color: #222;
-            position: relative;
-            display: inline-block;
-            z-index: 3;
-        }
-
-        .service-card h3::after {
-            content: '';
-            position: absolute;
-            width: 40px;
-            height: 3px;
-            background: #FF7F00;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            transition: width 0.3s;
-        }
-
-        .service-card:hover h3::after {
-            width: 60px;
-        }
-
-        .service-card p {
-            color: #444;
-            font-size: 15px;
-            line-height: 1.7;
-            position: relative;
-            z-index: 3;
-        }
-
-        .web-design { border-top-color: #FF7F00; }
-        .web-design .service-logo { background: linear-gradient(135deg, #FF7F00 0%, #FFAA00 100%); }
-        .web-dev { border-top-color: #4a6bff; }
-        .web-dev .service-logo { background: linear-gradient(135deg, #4a6bff 0%, #6a8bff 100%); }
-        .seo { border-top-color: #2ECC71; }
-        .seo .service-logo { background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%); }
-        .graphic-design { border-top-color: #E1306C; }
-        .graphic-design .service-logo { background: linear-gradient(135deg, #E1306C 0%, #FD1D1D 100%); }
-        .logos { border-top-color: #9B59B6; }
-        .logos .service-logo { background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%); }
-        .branding { border-top-color: #3498DB; }
-        .branding .service-logo { background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%); }
-        
-        /* Hexagonal Hive Gallery Styles */
-        .hive-gallery {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 0 auto;
-            max-width: 1000px;
-            position: relative;
-        }
-
-        .hive-row {
-            display: flex;
-            margin-bottom: -26px;
-        }
-
-        .hive-row:nth-child(even) {
-            margin-left: 86px;
-        }
-
-        .hexagon {
-            width: 150px;
-            height: 173px;
-            margin: 0 10px;
-            position: relative;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .hexagon:hover {
-            transform: scale(1.05);
-            z-index: 10;
-        }
-
-        .hexagon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
+        .fade-in-section {
             opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
 
-        .modal-overlay.active {
+        .fade-in-section.is-visible {
             opacity: 1;
-            visibility: visible;
+            transform: translateY(0);
         }
 
-        .modal-content {
-            position: relative;
-            max-width: 90%;
-            max-height: 90vh;
-        }
+        .modal { transition: opacity 0.3s ease; }
+        .modal-content { transition: transform 0.3s ease; }
+        .text-shadow { text-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .dark .text-shadow { text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 
-        .modal-content img {
-            max-width: 100%;
-            max-height: 80vh;
-            display: block;
-            margin: 0 auto;
-            border-radius: 5px;
-            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-nav {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-            z-index: 10;
-        }
-
-        .modal-nav button {
-            background: rgba(255, 255, 255, 0.3);
-            border: none;
-            color: white;
-            font-size: 2rem;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 0 20px;
-        }
-
-        .modal-nav button:hover {
-            background: rgba(255, 255, 255, 0.7);
-            color: #333;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.3);
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.7);
-            color: #333;
-        }
-
-        .modal-caption {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: white;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 5px;
-            margin: 0 auto;
-            max-width: 80%;
-        }
-
-        .social-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .social-link {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #333;
-            transition: transform 0.3s, color 0.3s;
-            width: 80px;
-        }
-
-        .social-link:hover {
-            transform: translateY(-5px);
-            color: #FF7F00;
-        }
-
-        .social-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-            transition: color 0.3s;
-        }
-
-        .social-link:hover .social-icon {
-            color: #FF7F00;
-        }
-
-        .social-name {
-            font-size: 14px;
-            font-weight: 500;
-            text-align: center;
-        }
-
-        .instagram { color: #E1306C; }
-        .twitter { color: #1DA1F2; }
-        .bluesky { color: #1185FE; }
-        .discord { color: #5865F2; }
-        .github { color: #333; }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #333;
-            color: #fff;
-            width: 100%;
-        }
-        
-        footer p {
-            margin: 0;
-            font-size: 14px;
-        }
-        
-        sup {
-            font-size: 0.8em;
-            vertical-align: super;
-        }
-        
-        .bold {
-            font-weight: 700;
-        }
-        
-        @media (max-width: 768px) {
-            section {
-                background-attachment: scroll !important;
-            }
-            
-            .section-content {
-                padding: 30px;
-                width: 85%;
-            }
-            
-            h1 { font-size: 36px; }
-            h2 { font-size: 28px; }
-            
-            nav {
-                justify-content: space-between;
-            }
-
-            .hamburger-menu {
-                display: block;
-            }
-            
-            .logo {
-                position: relative;
-                left: auto;
-            }
-            
-            .menu {
-                position: fixed;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100vh;
-                background: rgba(255, 255, 255, 0.98);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                transition: left 0.3s ease-in-out;
-                padding-bottom: 30px;
-            }
-
-            .menu.active {
-                left: 0;
-            }
-            
-            .menu li {
-                margin: 20px 0;
-            }
-
-            .menu li a {
-                font-size: 24px;
-            }
-            
-            .mobile-social-links {
-                display: flex;
-            }
-            
-            .services-grid { grid-template-columns: 1fr; }
-            
-            /* Hexagon adjustments for mobile */
-            .hive-row {
-                margin-bottom: -20px;
-            }
-
-            .hive-row:nth-child(even) {
-                margin-left: 65px;
-            }
-
-            .hexagon {
-                width: 100px;
-                height: 115px;
-                margin: 0 5px;
-            }
-            
-            .social-links { gap: 20px; }
-            .social-link { width: 70px; }
-            .social-icon { font-size: 35px; }
-        }
-
-        @media (max-width: 480px) {
-            .hive-row:nth-child(even) {
-                margin-left: 50px;
-            }
-
-            .hexagon {
-                width: 80px;
-                height: 92px;
-            }
-        }
+        #theme-toggle .sun-icon, .dark #theme-toggle .moon-icon { display: none; }
+        .dark #theme-toggle .sun-icon { display: block; }
     </style>
 </head>
-<body>
-    <header>
-        <nav>
-            <div class="logo"><img src="https://i.imgur.com/SXHKi92.png" alt="More Than Pixels logo"></div>
-            <ul class="menu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#contact">Contact</a></li>
-                
-                <!-- Mobile Social Links -->
-                <div class="mobile-social-links">
-                    <a href="https://instagram.com/yourusername" aria-label="Instagram">
-                        <i class="fab fa-instagram instagram"></i>
-                    </a>
-                    <a href="https://bsky.app/profile/yourhandle" aria-label="Bluesky">
-                        <i class="fas fa-cloud bluesky"></i>
-                    </a>
-                    <a href="https://twitter.com/yourhandle" aria-label="Twitter">
-                        <i class="fab fa-twitter twitter"></i>
-                    </a>
-                    <a href="https://discord.gg/yourinvite" aria-label="Discord">
-                        <i class="fab fa-discord discord"></i>
-                    </a>
-                    <a href="https://github.com/yourusername" aria-label="GitHub">
-                        <i class="fab fa-github github"></i>
-                    </a>
-                </div>
-            </ul>
-            <button class="hamburger-menu" aria-label="Toggle Menu" aria-expanded="false">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-times"></i>
+<body class="w-full">
+
+    <!-- Header -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 header-glass">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="text-2xl font-bold text-primary tracking-tight text-shadow">morethan<span class="accent-color-text">pixels</span></a>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#home" class="nav-link text-secondary hover:accent-color-text font-semibold transition duration-300">Home</a>
+                <a href="#work" class="nav-link text-secondary hover:accent-color-text font-semibold transition duration-300">Work</a>
+                <a href="#services" class="nav-link text-secondary hover:accent-color-text font-semibold transition duration-300">Services</a>
+                <a href="#about" class="nav-link text-secondary hover:accent-color-text font-semibold transition duration-300">About</a>
+                <a href="#contact" class="bg-primary hover:accent-bg-hover text-primary-content font-semibold py-2 px-4 rounded-lg transition duration-300">
+                    Get in Touch
+                </a>
+                <button id="theme-toggle" class="p-2 rounded-full text-secondary hover:accent-color-text">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sun-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </button>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
             </button>
         </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+             <a href="#home" class="block py-2 nav-link text-secondary hover:accent-color-text font-semibold">Home</a>
+             <a href="#work" class="block py-2 nav-link text-secondary hover:accent-color-text font-semibold">Work</a>
+             <a href="#services" class="block py-2 nav-link text-secondary hover:accent-color-text font-semibold">Services</a>
+             <a href="#about" class="block py-2 nav-link text-secondary hover:accent-color-text font-semibold">About</a>
+             <a href="#contact" class="block mt-2 text-center bg-primary hover:accent-bg-hover text-primary-content font-semibold py-2 px-4 rounded-lg">Get in Touch</a>
+        </div>
     </header>
 
-    <section id="home">
-        <div class="section-content">
-            <h1>Welcome to More Than Pixels</h1>
-            <p>We create beautiful, functional websites that help your business, brand & online presence grow.</p>
-            <a href="#contact" class="btn">Get Started</a>
-        </div>
-    </section>
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="h-screen flex items-center justify-center">
+            <div class="text-center px-4">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-primary uppercase tracking-tighter leading-tight text-shadow">
+                    Designing <span class="accent-color-text">Fluid</span><br>Digital Experiences
+                </h1>
+                <p class="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-secondary text-shadow">We forge bold brand identities and immersive web experiences that captivate and convert.</p>
+                <a href="#work" class="mt-8 inline-block bg-primary accent-bg-hover text-primary-content font-bold py-3 px-8 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-lg">View Our Work</a>
+            </div>
+        </section>
 
-    <section id="about">
-        <div class="section-content">
-            <h2>About Us</h2>
-            <p>We are a creative team dedicated to delivering exceptional digital experiences. Our passion for design and technology drives us to create solutions that make a real difference for our clients.</p>
-            <p>With years of experience in the industry, we've helped businesses of all sizes establish their online presence and achieve their digital goals.</p>
-        </div>
-    </section>
-
-    <section id="services">
-        <div class="section-content">
-            <h2>Our Services</h2>
-            <div class="services-grid">
-                <div class="service-card web-design">
-                    <a href="/web-design" class="card-link-overlay" aria-label="Web Design Service"></a>
-                    <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3242/3242257.png" alt="Web Design" onerror="this.onerror=null;this.src='https://placehold.co/50x50/FF7F00/FFFFFF?text=Icon';">
-                    </div>
-                    <h3>Web Design</h3>
-                    <p>Custom website designs that reflect your brand and engage your audience with intuitive user experiences.</p>
+        <!-- Work Section -->
+        <section id="work" class="py-20 lg:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 fade-in-section">
+                    <h2 class="text-4xl lg:text-5xl font-extrabold text-primary text-shadow">Featured Projects</h2>
+                    <p class="mt-2 text-secondary">A selection of our finest creations.</p>
                 </div>
-                
-                <div class="service-card web-dev">
-                    <a href="/web-development" class="card-link-overlay" aria-label="Web Development Service"></a>
-                    <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1006/1006363.png" alt="Web Development" onerror="this.onerror=null;this.src='https://placehold.co/50x50/4a6bff/FFFFFF?text=Icon';">
-                    </div>
-                    <h3>Web Development</h3>
-                    <p>Responsive, high-performance websites built with clean code and modern technologies.</p>
-                </div>
-                
-                <div class="service-card seo">
-                    <a href="/seo" class="card-link-overlay" aria-label="SEO Service"></a>
-                    <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2997/2997132.png" alt="SEO Optimization" onerror="this.onerror=null;this.src='https://placehold.co/50x50/2ECC71/FFFFFF?text=Icon';">
-                    </div>
-                    <h3>SEO Optimization</h3>
-                    <p>Comprehensive strategies to improve your search rankings and drive qualified traffic to your site.</p>
-                </div>
-                
-                <div class="service-card graphic-design">
-                    <a href="/graphic-design" class="card-link-overlay" aria-label="Graphic Design Service"></a>
-                    <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2779/2779775.png" alt="Graphic Design" onerror="this.onerror=null;this.src='https://placehold.co/50x50/E1306C/FFFFFF?text=Icon';">
-                    </div>
-                    <h3>Graphic Design</h3>
-                    <p>Visually stunning graphics, logos, and branding materials that make your business stand out.</p>
-                </div>
-
-                <div class="service-card logos">
-                    <a href="/logo-design" class="card-link-overlay" aria-label="Logo Design Service"></a>
-                    <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="Logo Design" onerror="this.onerror=null;this.src='https://placehold.co/50x50/9B59B6/FFFFFF?text=Icon';">
-                    </div>
-                    <h3>Logo Design</h3>
-                    <p>Unique and memorable logos that capture your brand's essence and make a lasting impression.</p>
-                </div>
-
-                <div class="service-card branding">
-                    <a href="/branding" class="card-link-overlay" aria-label="Branding Service"></a>
-                    <div class="service-logo">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3281/3281289.png" alt="Branding" onerror="this.onerror=null;this.src='https://placehold.co/50x50/3498DB/FFFFFF?text=Icon';">
-                    </div>
-                    <h3>Branding</h3>
-                    <p>Complete brand identity packages including color palettes, typography, and visual guidelines.</p>
+                <div class="portfolio-grid">
+                    <!-- Portfolio items will be dynamically generated by JS -->
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="portfolio">
-        <div class="section-content">
-            <h2>Our Portfolio</h2>
-            <div class="hive-gallery">
-                <!-- Row 1 -->
-                <div class="hive-row">
-                    <div class="hexagon" data-index="0">
-                        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="E-commerce Website">
-                    </div>
-                    <div class="hexagon" data-index="1">
-                        <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Mobile App UI">
-                    </div>
-                    <div class="hexagon" data-index="2">
-                        <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Brand Identity">
-                    </div>
+        <!-- Services Section -->
+        <section id="services" class="py-20 lg:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 fade-in-section">
+                    <h2 class="text-4xl lg:text-5xl font-extrabold text-primary text-shadow">Our Capabilities</h2>
+                    <p class="mt-2 text-secondary">Services tailored to elevate your brand.</p>
                 </div>
-                
-                <!-- Row 2 -->
-                <div class="hive-row">
-                    <div class="hexagon" data-index="3">
-                        <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Web Design">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Service Card 1 -->
+                    <div class="glass-card p-8 transition-all duration-300 transform hover:-translate-y-2 fade-in-section">
+                        <div class="accent-color-text mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg></div>
+                        <h3 class="text-2xl font-bold text-primary mb-2">Brand Identity</h3>
+                        <p class="text-secondary">Crafting memorable logos, style guides, and visual systems that tell your unique story.</p>
                     </div>
-                    <div class="hexagon" data-index="4">
-                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Team Project">
+                     <!-- Service Card 2 -->
+                    <div class="glass-card p-8 transition-all duration-300 transform hover:-translate-y-2 fade-in-section" style="transition-delay: 100ms;">
+                        <div class="accent-color-text mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg></div>
+                        <h3 class="text-2xl font-bold text-primary mb-2">UI/UX Design</h3>
+                        <p class="text-secondary">Designing intuitive and beautiful interfaces for websites and applications that users love.</p>
                     </div>
-                    <div class="hexagon" data-index="5">
-                        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Development Work">
-                    </div>
-                </div>
-                
-                <!-- Row 3 -->
-                <div class="hive-row">
-                    <div class="hexagon" data-index="6">
-                        <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Creative Design">
-                    </div>
-                    <div class="hexagon" data-index="7">
-                        <img src="https://images.unsplash.com/photo-1528747045269-390fe33c19f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Marketing Materials">
-                    </div>
-                    <div class="hexagon" data-index="8">
-                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="UX Research">
+                     <!-- Service Card 3 -->
+                    <div class="glass-card p-8 transition-all duration-300 transform hover:-translate-y-2 fade-in-section" style="transition-delay: 200ms;">
+                        <div class="accent-color-text mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
+                        <h3 class="text-2xl font-bold text-primary mb-2">Motion Graphics</h3>
+                        <p class="text-secondary">Bringing your brand to life with engaging animations, video intros, and dynamic content.</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Modal for image viewing -->
-    <div class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close" aria-label="Close Modal">&times;</button>
-            <img src="" alt="" id="modal-image">
-            <div class="modal-caption" id="modal-caption"></div>
-            <div class="modal-nav">
-                <button class="modal-prev" aria-label="Previous Image">&lt;</button>
-                <button class="modal-next" aria-label="Next Image">&gt;</button>
+        <!-- About Section -->
+        <section id="about" class="py-20 lg:py-32">
+             <div class="container mx-auto px-6">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="fade-in-section">
+                        <img src="https://placehold.co/600x700/e2e8f0/334155?text=Studio+Space" alt="About morethanpixels" class="rounded-2xl shadow-2xl w-full">
+                    </div>
+                    <div class="fade-in-section" style="transition-delay: 150ms;">
+                        <h2 class="text-4xl lg:text-5xl font-extrabold text-primary mb-4 text-shadow">We are morethanpixels<span class="accent-color-text">.</span></h2>
+                        <p class="text-secondary text-lg mb-4">Founded on the principle that great design is a powerful force, we are a small but mighty team of creators, thinkers, and strategists. We believe in a collaborative process, working closely with our clients to turn their visions into reality.</p>
+                        <p class="text-secondary text-lg mb-6">Our passion lies in pushing creative boundaries and leveraging the latest technology to build experiences that are not only beautiful but also strategically effective. We're not just designers; we're your creative partners.</p>
+                        <a href="#contact" class="bg-transparent border-2 accent-border text-primary font-bold py-3 px-8 rounded-lg text-lg accent-bg-hover hover:text-white dark:hover:text-slate-900 transition duration-300">Let's Collaborate</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 lg:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 fade-in-section">
+                    <h2 class="text-4xl lg:text-5xl font-extrabold text-primary text-shadow">Start a Project</h2>
+                    <p class="mt-2 text-secondary">Have an idea? We'd love to hear about it.</p>
+                </div>
+                <div class="max-w-2xl mx-auto fade-in-section glass-card p-8">
+                    <form action="#" method="POST" class="space-y-6">
+                        <div>
+                            <label for="name" class="sr-only">Name</label>
+                            <input type="text" name="name" id="name" placeholder="Your Name" class="w-full bg-white bg-opacity-50 dark:bg-slate-800 dark:bg-opacity-30 border border-white border-opacity-30 dark:border-slate-700 dark:border-opacity-50 rounded-lg px-4 py-3 text-primary placeholder:text-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 transition">
+                        </div>
+                        <div>
+                            <label for="email" class="sr-only">Email</label>
+                            <input type="email" name="email" id="email" placeholder="Your Email" class="w-full bg-white bg-opacity-50 dark:bg-slate-800 dark:bg-opacity-30 border border-white border-opacity-30 dark:border-slate-700 dark:border-opacity-50 rounded-lg px-4 py-3 text-primary placeholder:text-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 transition">
+                        </div>
+                        <div>
+                            <label for="message" class="sr-only">Message</label>
+                            <textarea name="message" id="message" rows="5" placeholder="Tell us about your project..." class="w-full bg-white bg-opacity-50 dark:bg-slate-800 dark:bg-opacity-30 border border-white border-opacity-30 dark:border-slate-700 dark:border-opacity-50 rounded-lg px-4 py-3 text-primary placeholder:text-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 transition"></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="w-full md:w-auto bg-primary accent-bg-hover text-primary-content font-bold py-3 px-12 rounded-lg text-lg transition duration-300 transform hover:scale-105">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8">
+        <div class="container mx-auto px-6 text-center text-secondary">
+            <p>&copy; <span id="year"></span> morethanpixels. All Rights Reserved.</p>
+             <div class="flex justify-center space-x-6 mt-4">
+                <a href="#" class="hover:accent-color-text transition">Twitter</a>
+                <a href="#" class="hover:accent-color-text transition">Instagram</a>
+                <a href="#" class="hover:accent-color-text transition">Dribbble</a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <a href="#home" id="back-to-top" class="fixed bottom-8 right-8 z-50 p-3 bg-primary text-primary-content rounded-full shadow-lg accent-bg-hover transition-all duration-300 opacity-0 pointer-events-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>
+    </a>
+
+    <!-- Project Details Modal -->
+    <div id="project-modal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 opacity-0 pointer-events-none">
+        <div id="modal-content-wrapper" class="modal-content glass-card w-11/12 max-w-4xl max-h-[90vh] overflow-y-auto transform scale-95">
+            <div class="sticky top-0 p-4 flex justify-between items-center z-10 glass-card rounded-b-none">
+                <h3 id="modal-title" class="text-2xl font-bold text-primary">Project Title</h3>
+                <button id="close-modal-button" class="text-secondary hover:text-primary transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="p-8">
+                <img id="modal-image" src="" alt="Project Image" class="w-full h-auto rounded-lg mb-6 shadow-lg">
+                <p id="modal-category" class="accent-color-text font-semibold mb-2"></p>
+                <p id="modal-description" class="text-secondary leading-relaxed"></p>
             </div>
         </div>
     </div>
 
-    <section id="contact">
-        <div class="section-content">
-            <h2>Contact Us</h2>
-            <p>Connect with us on our social platforms:</p>
-            
-            <div class="social-links">
-                <a href="https://instagram.com/yourusername" class="social-link" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-instagram social-icon instagram"></i>
-                    <span class="social-name">Instagram</span>
-                </a>
-                
-                <a href="https://bsky.app/profile/yourhandle" class="social-link" target="_blank" rel="noopener noreferrer">
-                    <i class="fas fa-cloud social-icon bluesky"></i>
-                    <span class="social-name">Bluesky</span>
-                </a>
-                
-                <a href="https://twitter.com/yourhandle" class="social-link" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-twitter social-icon twitter"></i>
-                    <span class="social-name">X/Twitter</span>
-                </a>
-                
-                <a href="https://discord.gg/yourinvite" class="social-link" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-discord social-icon discord"></i>
-                    <span class="social-name">Discord</span>
-                </a>
-                
-                <a href="https://github.com/yourusername" class="social-link" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-github social-icon github"></i>
-                    <span class="social-name">GitHub</span>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p><sup>&copy;</sup> 2025 <span class="bold">Alex Boldy</span>. All rights reserved.</p>
-    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Hamburger menu logic
-            const hamburger = document.querySelector('.hamburger-menu');
-            const menu = document.querySelector('.menu');
-            const menuLinks = document.querySelectorAll('.menu a, .mobile-social-links a');
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const themeToggle = document.getElementById('theme-toggle');
             const body = document.body;
 
-            if (hamburger && menu) {
-                hamburger.addEventListener('click', () => {
-                    const isExpanded = hamburger.classList.toggle('active');
-                    menu.classList.toggle('active');
-                    body.classList.toggle('nav-open');
-                    hamburger.setAttribute('aria-expanded', isExpanded);
-                });
+            // --- Theme Toggle Logic ---
+            // On page load, check for saved theme
+            if (localStorage.getItem('theme') === 'dark') {
+                body.classList.add('dark');
             }
 
-            // Close menu when a link is clicked (including social links)
-            menuLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (hamburger.classList.contains('active')) {
-                        hamburger.classList.remove('active');
-                        menu.classList.remove('active');
-                        body.classList.remove('nav-open');
-                        hamburger.setAttribute('aria-expanded', 'false');
-                    }
-                });
-            });
-
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetElement = document.querySelector(this.getAttribute('href'));
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-
-            // Hexagon Gallery Modal Functionality
-            const modal = document.querySelector('.modal-overlay');
-            const modalImg = document.getElementById('modal-image');
-            const modalCaption = document.getElementById('modal-caption');
-            const closeBtn = document.querySelector('.modal-close');
-            const prevBtn = document.querySelector('.modal-prev');
-            const nextBtn = document.querySelector('.modal-next');
-            const hexagons = document.querySelectorAll('.hexagon');
-            
-            // Create array of all gallery images with their data
-            const galleryItems = Array.from(hexagons).map(hexagon => {
-                return {
-                    img: hexagon.querySelector('img').src,
-                    alt: hexagon.querySelector('img').alt,
-                    index: parseInt(hexagon.getAttribute('data-index'))
-                };
-            });
-            
-            let currentIndex = 0;
-            
-            // Open modal with clicked image
-            hexagons.forEach(hexagon => {
-                hexagon.addEventListener('click', function() {
-                    currentIndex = parseInt(this.getAttribute('data-index'));
-                    updateModal(currentIndex);
-                    modal.classList.add('active');
-                    body.classList.add('modal-open');
-                });
-            });
-            
-            // Close modal
-            closeBtn.addEventListener('click', function() {
-                modal.classList.remove('active');
-                body.classList.remove('modal-open');
-            });
-            
-            // Previous image
-            prevBtn.addEventListener('click', function() {
-                currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
-                updateModal(currentIndex);
-            });
-            
-            // Next image
-            nextBtn.addEventListener('click', function() {
-                currentIndex = (currentIndex + 1) % galleryItems.length;
-                updateModal(currentIndex);
-            });
-            
-            // Keyboard navigation
-            document.addEventListener('keydown', function(e) {
-                if (modal.classList.contains('active')) {
-                    if (e.key === 'Escape') {
-                        modal.classList.remove('active');
-                        body.classList.remove('modal-open');
-                    } else if (e.key === 'ArrowLeft') {
-                        currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
-                        updateModal(currentIndex);
-                    } else if (e.key === 'ArrowRight') {
-                        currentIndex = (currentIndex + 1) % galleryItems.length;
-                        updateModal(currentIndex);
-                    }
-                }
-            });
-            
-            // Update modal content
-            function updateModal(index) {
-                const item = galleryItems[index];
-                modalImg.src = item.img;
-                modalImg.alt = item.alt;
-                modalCaption.textContent = item.alt;
-            }
-            
-            // Close modal when clicking outside image
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                    body.classList.remove('modal-open');
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark');
+                // Save theme preference
+                if (body.classList.contains('dark')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
                 }
             });
 
-            // Image loading fallback for background images
-            const sections = document.querySelectorAll('section[id]');
-            const fallbackColors = {
-                'home': '#e3f2fd',
-                'about': '#e8f5e9',
-                'services': '#fff3e0',
-                'portfolio': '#fce4ec',
-                'contact': '#f3e5f5'
+            // --- Unify Text Colors ---
+            // This small script sets the text color for buttons to match the primary text color of the theme.
+            const updateTextColors = () => {
+                const isDark = body.classList.contains('dark');
+                const primaryContentColor = isDark ? '#1a202c' : '#ffffff';
+                const primaryBgColor = isDark ? '#e2e8f0' : '#1a202c';
+                
+                document.querySelectorAll('.text-primary').forEach(el => el.style.color = 'var(--text-primary)');
+                document.querySelectorAll('.text-secondary').forEach(el => el.style.color = 'var(--text-secondary)');
+                document.querySelectorAll('.bg-primary').forEach(el => el.style.backgroundColor = primaryBgColor);
+                document.querySelectorAll('.text-primary-content').forEach(el => el.style.color = primaryContentColor);
             };
 
-            sections.forEach(section => {
-                const bgImage = window.getComputedStyle(section).backgroundImage;
-                
-                if (bgImage && bgImage.includes('url')) {
-                    const imgUrl = bgImage.replace(/.*url\(["']?([^"']*)["']?\).*/, '$1');
-                    if (imgUrl) {
-                        const img = new Image();
-                        img.src = imgUrl;
-                        img.onerror = function() {
-                            console.warn('Background image failed to load. Applying fallback color for section:', section.id);
-                            section.style.backgroundImage = 'none';
-                            section.style.backgroundColor = fallbackColors[section.id] || '#f5f5f5';
-                        };
+            // Call it on load and when toggling theme
+            updateTextColors();
+            new MutationObserver(updateTextColors).observe(body, { attributes: true, attributeFilter: ['class'] });
+
+            // --- Mobile Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // --- Footer Year ---
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // --- Intersection Observer for Fade-in Animations ---
+            const sections = document.querySelectorAll('.fade-in-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
                     }
+                });
+            }, { rootMargin: '0px', threshold: 0.1 });
+            sections.forEach(section => observer.observe(section));
+            
+            // --- Active Nav Link Highlighting on Scroll ---
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageSections = document.querySelectorAll('section');
+
+            const highlightNavLink = () => {
+                let currentSection = '';
+                pageSections.forEach(section => {
+                    if (window.scrollY >= section.offsetTop - 100) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('accent-color-text');
+                    if (link.getAttribute('href').substring(1) === currentSection) {
+                        link.classList.add('accent-color-text');
+                    }
+                });
+            };
+            window.addEventListener('scroll', highlightNavLink);
+
+            // --- Modal and Portfolio Logic ---
+            const portfolioGrid = document.querySelector('.portfolio-grid');
+            const modal = document.getElementById('project-modal');
+            const modalContent = document.getElementById('modal-content-wrapper');
+            const closeModalButton = document.getElementById('close-modal-button');
+
+            const projects = [
+                { id: 1, title: 'CyberCorp Rebrand', category: 'Branding & Identity', img: 'https://placehold.co/800x600/8A2BE2/ffffff?text=CyberCorp', description: 'A complete overhaul of the CyberCorp brand, focusing on a futuristic and trustworthy aesthetic. The project included a new logo, color palette, typography system, and a comprehensive brand guide.', layout: 'grid-item-span-2 grid-item-row-span-2' },
+                { id: 2, title: 'Nova Launcher UI', category: 'UI/UX Design', img: 'https://placehold.co/800x600/ff4500/ffffff?text=Nova+UI', description: 'User interface design for a next-generation mobile launcher. We focused on creating a seamless, intuitive, and customizable user experience.', layout: '' },
+                { id: 3, title: 'Aether Animations', category: 'Motion Graphics', img: 'https://placehold.co/800x600/32cd32/ffffff?text=Aether+FX', description: 'A series of promotional animations for the Aether product launch. The animations highlighted key features through dynamic and engaging motion graphics.', layout: '' },
+                { id: 4, title: 'Quantum Website', category: 'Web Design', img: 'https://placehold.co/800x600/4169e1/ffffff?text=Quantum+Web', description: 'A fully responsive marketing website for Quantum Solutions. The design emphasizes clarity, speed, and cutting-edge technology.', layout: 'grid-item-span-2' },
+                { id: 5, title: 'Zenith Packaging', category: 'Packaging Design', img: 'https://placehold.co/800x600/ff8c00/ffffff?text=Zenith', description: 'Elegant and sustainable packaging design for the Zenith line of luxury goods. The design uses minimalist principles and premium materials.', layout: '' },
+                { id: 6, title: 'Momentum App', category: 'UI/UX Design', img: 'https://placehold.co/800x600/20b2aa/ffffff?text=Momentum', description: 'A productivity app designed to help users focus and build momentum. The UI is clean, distraction-free, and motivating.', layout: '' },
+            ];
+
+            projects.forEach(project => {
+                const item = document.createElement('div');
+                item.className = `group relative rounded-xl overflow-hidden cursor-pointer fade-in-section glass-card !p-0 ${project.layout}`;
+                item.innerHTML = `
+                    <img src="${project.img}" alt="${project.title}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-end p-6" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <p class="text-sm font-semibold" style="color:#d8b4fe;">${project.category}</p>
+                            <h3 class="text-xl font-bold text-white text-shadow">${project.title}</h3>
+                        </div>
+                    </div>
+                `;
+                item.addEventListener('click', () => openModal(project));
+                portfolioGrid.appendChild(item);
+            });
+            
+            document.querySelectorAll('.fade-in-section').forEach(section => observer.observe(section));
+
+            function openModal(project) {
+                document.getElementById('modal-title').textContent = project.title;
+                document.getElementById('modal-image').src = project.img.replace('800x600', '1200x800');
+                document.getElementById('modal-category').textContent = project.category;
+                document.getElementById('modal-description').textContent = project.description;
+                
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modalContent.classList.remove('scale-95');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                modalContent.classList.add('scale-95');
+                document.body.style.overflow = '';
+            }
+
+            closeModalButton.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeModal();
+            });
+
+            // --- Back to Top Button Logic ---
+            const backToTopButton = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'pointer-events-none');
                 }
             });
         });
