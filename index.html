@@ -1,469 +1,244 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>morethanpixels - Design Studio</title>
+    <title>More Than Pixels</title>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Configure Tailwind to use Inter font -->
     <style>
-        /* CSS Variables for Theming */
-        :root {
-            --bg-gradient: linear-gradient(120deg, #f0f3ff 0%, #d9e7ff 100%);
-            --text-primary: #1a202c;
-            --text-secondary: #4a5568;
-            --text-accent: #8A2BE2;
-            --header-bg: rgba(255, 255, 255, 0.5);
-            --card-bg: rgba(255, 255, 255, 0.3);
-            --card-border: rgba(255, 255, 255, 0.2);
-            --blob1-bg: rgba(138, 43, 226, 0.2);
-            --blob2-bg: rgba(0, 123, 255, 0.2);
-            --button-primary-bg: #1a202c;
-            --button-primary-hover: #8A2BE2;
-        }
-
-        .dark {
-            --bg-gradient: linear-gradient(120deg, #0f172a 0%, #1e293b 100%);
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --text-accent: #a78bfa;
-            --header-bg: rgba(15, 23, 42, 0.5);
-            --card-bg: rgba(30, 41, 59, 0.3);
-            --card-border: rgba(51, 65, 85, 0.2);
-            --blob1-bg: rgba(167, 139, 250, 0.15);
-            --blob2-bg: rgba(59, 130, 246, 0.15);
-            --button-primary-bg: #e2e8f0;
-            --button-primary-hover: #a78bfa;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-primary);
-            overflow-x: hidden;
-            position: relative;
-            transition: background 0.5s ease, color 0.5s ease;
+            font-family: 'Inter', sans-serif;
+            /* Updated background to include a subtle radial gradient 'wave' effect */
+            background-color: #0d1117; /* Dark background base color */
+            background-image: 
+                radial-gradient(
+                    ellipse at 50% 100%, 
+                    rgba(79, 70, 229, 0.12) 0%, /* Stronger indigo glow at the bottom/center */
+                    transparent 60%
+                ),
+                radial-gradient(
+                    ellipse at 10% 20%, 
+                    rgba(79, 70, 229, 0.08) 0%, /* Subtle glow top-left */
+                    transparent 40%
+                );
+            background-attachment: fixed; /* Keeps the effect static relative to the viewport */
+            color: #c9d1d9; /* Light text */
         }
-
-        /* Decorative Background Blobs */
-        body::before, body::after {
+        .section-title::after {
             content: '';
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(100px);
-            z-index: -1;
-            transition: background 0.5s ease;
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: #4F46E5; /* Indigo accent */
+            margin-top: 8px;
+            border-radius: 9999px;
         }
-
-        body::before {
-            width: 350px;
-            height: 350px;
-            background: var(--blob1-bg);
-            top: -100px;
-            left: -100px;
-        }
-        
-        body::after {
-            width: 400px;
-            height: 400px;
-            background: var(--blob2-bg);
-            bottom: -150px;
-            right: -150px;
-            animation: moveBlob 15s infinite alternate;
-        }
-
-        @keyframes moveBlob {
-            from { transform: translate(0, 0) scale(1); }
-            to { transform: translate(50px, -50px) scale(1.1); }
-        }
-        
-        .accent-color-text { color: var(--text-accent); }
-        .accent-border { border-color: var(--text-accent); }
-        .accent-bg-hover:hover { background-color: var(--button-primary-hover); }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        .dark ::-webkit-scrollbar-track, ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
-        .dark ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
-        .dark ::-webkit-scrollbar-thumb:hover, ::-webkit-scrollbar-thumb:hover { background: var(--text-accent); }
-
-
-        /* Glassmorphism Card Style */
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--card-border);
-            border-radius: 1rem;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-            transition: background 0.5s ease, border-color 0.5s ease;
-        }
-        .dark .glass-card {
-             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .header-glass {
-            background: var(--header-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--card-border);
-            transition: background 0.5s ease, border-color 0.5s ease;
-        }
-
-        .portfolio-grid {
-            display: grid;
-            gap: 1.5rem;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        }
-
-        @media (min-width: 1024px) {
-            .portfolio-grid { grid-template-columns: repeat(4, 1fr); }
-            .grid-item-span-2 { grid-column: span 2; }
-            .grid-item-row-span-2 { grid-row: span 2; }
-        }
-
-        .fade-in-section {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-
-        .fade-in-section.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .modal { transition: opacity 0.3s ease; }
-        .modal-content { transition: transform 0.3s ease; }
-        .text-shadow { text-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .dark .text-shadow { text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-
-        #theme-toggle .sun-icon, .dark #theme-toggle .moon-icon { display: none; }
-        .dark #theme-toggle .sun-icon { display: block; }
     </style>
 </head>
-<body class="w-full">
+<body class="antialiased">
 
-    <!-- Header -->
-    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 header-glass">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#home" class="text-2xl font-bold text-primary tracking-tight text-shadow">morethan<span class="accent-color-text">pixels</span></a>
-            <div class="hidden md:flex space-x-6 items-center">
-                <a href="#home" class="nav-link text-secondary hover:accent-color-text font-semibold transition duration-300">Home</a>
-                <a href="#work" class="nav-link text-secondary hover:accent-color-text font-semibold transition duration-300">Work</a>
-                <a href="#services" class="nav-link text-secondary hover:accent-color-text font-semibold transition duration-300">Services</a>
-                <a href="#about" class="nav-link text-secondary hover:accent-color-text font-semibold transition duration-300">About</a>
-                <a href="#contact" class="bg-primary hover:accent-bg-hover text-primary-content font-semibold py-2 px-4 rounded-lg transition duration-300">
-                    Get in Touch
-                </a>
-                <button id="theme-toggle" class="p-2 rounded-full text-secondary hover:accent-color-text">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sun-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                </button>
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 bg-[#161b22] border-b border-[#30363d] shadow-lg">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Name -->
+                <div class="flex-shrink-0">
+                    <span class="text-xl font-bold text-indigo-400">More Than Pixels</span>
+                </div>
+                <!-- Desktop Navigation -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#web" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Web Design</a>
+                        <a href="#graphic" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Graphic Design</a>
+                        <a href="#qa" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Quality Assurance</a>
+                        <a href="#tech" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Tech Stack</a>
+                    </div>
+                </div>
+                <!-- Mobile Menu Button (Optional: requires JS, but for simplicity, we keep it hidden) -->
+                <div class="-mr-2 flex md:hidden">
+                    <!-- For a single file, adding complex JS toggles is often avoided, so we'll rely on scroll -->
+                </div>
             </div>
-            <button id="mobile-menu-button" class="md:hidden text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-            </button>
         </nav>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
-             <a href="#home" class="block py-2 nav-link text-secondary hover:accent-color-text font-semibold">Home</a>
-             <a href="#work" class="block py-2 nav-link text-secondary hover:accent-color-text font-semibold">Work</a>
-             <a href="#services" class="block py-2 nav-link text-secondary hover:accent-color-text font-semibold">Services</a>
-             <a href="#about" class="block py-2 nav-link text-secondary hover:accent-color-text font-semibold">About</a>
-             <a href="#contact" class="block mt-2 text-center bg-primary hover:accent-bg-hover text-primary-content font-semibold py-2 px-4 rounded-lg">Get in Touch</a>
-        </div>
     </header>
 
-    <main>
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
         <!-- Hero Section -->
-        <section id="home" class="h-screen flex items-center justify-center">
-            <div class="text-center px-4">
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-primary uppercase tracking-tighter leading-tight text-shadow">
-                    Designing <span class="accent-color-text">Fluid</span><br>Digital Experiences
-                </h1>
-                <p class="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-secondary text-shadow">We forge bold brand identities and immersive web experiences that captivate and convert.</p>
-                <a href="#work" class="mt-8 inline-block bg-primary accent-bg-hover text-primary-content font-bold py-3 px-8 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-lg">View Our Work</a>
+        <section class="text-center mb-24 py-16 bg-[#161b22] rounded-xl shadow-2xl border border-[#30363d]">
+            <h1 class="text-5xl sm:text-7xl font-extrabold text-white mb-4">
+                Creative & Technical
+            </h1>
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                Two decades blending graphic design, web design & quality assurance.
+            </p>
+            <div class="mt-8">
+                <a href="#web" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 shadow-md transition duration-150 ease-in-out">
+                    View My Work
+                </a>
             </div>
         </section>
 
-        <!-- Work Section -->
-        <section id="work" class="py-20 lg:py-32">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12 fade-in-section">
-                    <h2 class="text-4xl lg:text-5xl font-extrabold text-primary text-shadow">Featured Projects</h2>
-                    <p class="mt-2 text-secondary">A selection of our finest creations.</p>
+        <!-- Web Design Section -->
+        <section id="web" class="mb-24 pt-12">
+            <h2 class="section-title text-4xl font-bold mb-10 text-white">Web Design & UX</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Project 1 Mockup -->
+                <div class="bg-[#161b22] p-6 rounded-xl shadow-lg border border-[#30363d] hover:border-indigo-500 transition duration-300">
+                    <h3 class="text-xl font-semibold text-indigo-400 mb-3">Responsive E-Commerce Platform</h3>
+                    <p class="text-gray-400 text-sm mb-4">Focus on mobile-first design, clean navigation, and high conversion UX funnels. Used **React** and **Tailwind CSS** for component-based architecture.</p>
+                    <ul class="text-sm text-gray-500 list-disc ml-5">
+                        <li>Designed 5 core templates</li>
+                        <li>Implemented A/B testing variations</li>
+                        <li>Improved page load time by 30%</li>
+                    </ul>
                 </div>
-                <div class="portfolio-grid">
-                    <!-- Portfolio items will be dynamically generated by JS -->
+                <!-- Project 2 Mockup -->
+                <div class="bg-[#161b22] p-6 rounded-xl shadow-lg border border-[#30363d] hover:border-indigo-500 transition duration-300">
+                    <h3 class="text-xl font-semibold text-indigo-400 mb-3">SaaS Dashboard Redesign</h3>
+                    <p class="text-gray-400 text-sm mb-4">Simplified complex data visualization using **D3.js** charts and a clear information hierarchy. Goal: reduce user training time.</p>
+                    <ul class="text-sm text-gray-500 list-disc ml-5">
+                        <li>Developed wireframes and prototypes</li>
+                        <li>Reduced cognitive load by 40%</li>
+                        <li>Custom icon library development</li>
+                    </ul>
                 </div>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section id="services" class="py-20 lg:py-32">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12 fade-in-section">
-                    <h2 class="text-4xl lg:text-5xl font-extrabold text-primary text-shadow">Our Capabilities</h2>
-                    <p class="mt-2 text-secondary">Services tailored to elevate your brand.</p>
-                </div>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Service Card 1 -->
-                    <div class="glass-card p-8 transition-all duration-300 transform hover:-translate-y-2 fade-in-section">
-                        <div class="accent-color-text mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg></div>
-                        <h3 class="text-2xl font-bold text-primary mb-2">Brand Identity</h3>
-                        <p class="text-secondary">Crafting memorable logos, style guides, and visual systems that tell your unique story.</p>
-                    </div>
-                     <!-- Service Card 2 -->
-                    <div class="glass-card p-8 transition-all duration-300 transform hover:-translate-y-2 fade-in-section" style="transition-delay: 100ms;">
-                        <div class="accent-color-text mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg></div>
-                        <h3 class="text-2xl font-bold text-primary mb-2">UI/UX Design</h3>
-                        <p class="text-secondary">Designing intuitive and beautiful interfaces for websites and applications that users love.</p>
-                    </div>
-                     <!-- Service Card 3 -->
-                    <div class="glass-card p-8 transition-all duration-300 transform hover:-translate-y-2 fade-in-section" style="transition-delay: 200ms;">
-                        <div class="accent-color-text mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
-                        <h3 class="text-2xl font-bold text-primary mb-2">Motion Graphics</h3>
-                        <p class="text-secondary">Bringing your brand to life with engaging animations, video intros, and dynamic content.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="py-20 lg:py-32">
-             <div class="container mx-auto px-6">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="fade-in-section">
-                        <img src="https://placehold.co/600x700/e2e8f0/334155?text=Studio+Space" alt="About morethanpixels" class="rounded-2xl shadow-2xl w-full">
-                    </div>
-                    <div class="fade-in-section" style="transition-delay: 150ms;">
-                        <h2 class="text-4xl lg:text-5xl font-extrabold text-primary mb-4 text-shadow">We are morethanpixels<span class="accent-color-text">.</span></h2>
-                        <p class="text-secondary text-lg mb-4">Founded on the principle that great design is a powerful force, we are a small but mighty team of creators, thinkers, and strategists. We believe in a collaborative process, working closely with our clients to turn their visions into reality.</p>
-                        <p class="text-secondary text-lg mb-6">Our passion lies in pushing creative boundaries and leveraging the latest technology to build experiences that are not only beautiful but also strategically effective. We're not just designers; we're your creative partners.</p>
-                        <a href="#contact" class="bg-transparent border-2 accent-border text-primary font-bold py-3 px-8 rounded-lg text-lg accent-bg-hover hover:text-white dark:hover:text-slate-900 transition duration-300">Let's Collaborate</a>
-                    </div>
+                <!-- Project 3 Mockup -->
+                <div class="bg-[#161b22] p-6 rounded-xl shadow-lg border border-[#30363d] hover:border-indigo-500 transition duration-300">
+                    <h3 class="text-xl font-semibold text-indigo-400 mb-3">Portfolio Site Generator (This Site)</h3>
+                    <p class="text-gray-400 text-sm mb-4">Built for speed and adaptability using raw HTML, modern CSS practices, and minimal JavaScript for fluid performance.</p>
+                    <ul class="text-sm text-gray-500 list-disc ml-5">
+                        <li>100% Core Web Vitals compliant</li>
+                        <li>Pure utility-first CSS (Tailwind)</li>
+                        <li>Accessibility (WCAG) compliance focus</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <!-- Contact Section -->
-        <section id="contact" class="py-20 lg:py-32">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12 fade-in-section">
-                    <h2 class="text-4xl lg:text-5xl font-extrabold text-primary text-shadow">Start a Project</h2>
-                    <p class="mt-2 text-secondary">Have an idea? We'd love to hear about it.</p>
+        <!-- Graphic Design Section -->
+        <section id="graphic" class="mb-24 pt-12">
+            <h2 class="section-title text-4xl font-bold mb-10 text-white">Graphic Design & Branding</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-[#161b22] p-6 rounded-xl shadow-lg border border-[#30363d]">
+                    <h3 class="text-2xl font-semibold text-white mb-3">Brand Identity Systems</h3>
+                    <p class="text-gray-400 mb-4">Created comprehensive brand style guides including logo usage, color palettes (**CMYK/HEX**), and typography stacks for a few clients.</p>
+                    <ul class="text-sm text-gray-500 list-disc ml-5">
+                        <li>Logo design and vector optimization</li>
+                        <li>Print collateral (business cards, letterheads)</li>
+                        <li>Digital asset creation (social media banners)</li>
+                    </ul>
                 </div>
-                <div class="max-w-2xl mx-auto fade-in-section glass-card p-8">
-                    <form action="#" method="POST" class="space-y-6">
-                        <div>
-                            <label for="name" class="sr-only">Name</label>
-                            <input type="text" name="name" id="name" placeholder="Your Name" class="w-full bg-white bg-opacity-50 dark:bg-slate-800 dark:bg-opacity-30 border border-white border-opacity-30 dark:border-slate-700 dark:border-opacity-50 rounded-lg px-4 py-3 text-primary placeholder:text-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 transition">
-                        </div>
-                        <div>
-                            <label for="email" class="sr-only">Email</label>
-                            <input type="email" name="email" id="email" placeholder="Your Email" class="w-full bg-white bg-opacity-50 dark:bg-slate-800 dark:bg-opacity-30 border border-white border-opacity-30 dark:border-slate-700 dark:border-opacity-50 rounded-lg px-4 py-3 text-primary placeholder:text-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 transition">
-                        </div>
-                        <div>
-                            <label for="message" class="sr-only">Message</label>
-                            <textarea name="message" id="message" rows="5" placeholder="Tell us about your project..." class="w-full bg-white bg-opacity-50 dark:bg-slate-800 dark:bg-opacity-30 border border-white border-opacity-30 dark:border-slate-700 dark:border-opacity-50 rounded-lg px-4 py-3 text-primary placeholder:text-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 transition"></textarea>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="w-full md:w-auto bg-primary accent-bg-hover text-primary-content font-bold py-3 px-12 rounded-lg text-lg transition duration-300 transform hover:scale-105">Send Message</button>
-                        </div>
-                    </form>
+                <div class="bg-[#161b22] p-6 rounded-xl shadow-lg border border-[#30363d]">
+                    <h3 class="text-2xl font-semibold text-white mb-3">Marketing Collateral & Illustration</h3>
+                    <p class="text-gray-400 mb-4">Designed cohesive visual assets for product launches, including infographics, email headers, and custom digital illustrations.</p>
+                    <ul class="text-sm text-gray-500 list-disc ml-5">
+                        <li>Adobe Creative Suite proficiency (Ps, Ai, Id)</li>
+                        <li>Design for web optimization (SVG, WebP)</li>
+                        <li>Maintaining brand consistency across platforms</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
+        <!-- Quality Assurance Section -->
+        <section id="qa" class="mb-24 pt-12">
+            <h2 class="section-title text-4xl font-bold mb-10 text-white">Quality Assurance & Testing</h2>
+            <div class="bg-[#161b22] p-8 rounded-xl shadow-lg border border-[#30363d]">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-indigo-400 mb-2">Methodologies</h3>
+                        <ul class="text-gray-400 space-y-1 text-sm">
+                            <li>Manual & Exploratory Testing</li>
+                            <li>Mantis/JIRA Environments</li>
+                            <li>Black-Box and White-Box Testing</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-indigo-400 mb-2">Tools & Reporting</h3>
+                        <ul class="text-gray-400 space-y-1 text-sm">
+                            <li>**Jira** & **Trello** for bug tracking</li>
+                            <li>Clear, reproducible bug reports (Steps, Expected, Actual)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-indigo-400 mb-2">Key Skills</h3>
+                        <ul class="text-gray-400 space-y-1 text-sm">
+                            <li>Cross-Browser Compatibility Testing</li>
+                            <li>Regression & Load Testing Fundamentals</li>
+                            <li>Detail-oriented documentation skills</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="mt-6 text-gray-500 italic text-sm border-t border-[#30363d] pt-4">My QA experience ensures all design and development work is robust, accessible, and error-free.</p>
+            </div>
+        </section>
+
+        <!-- Tech Stack Section -->
+        <section id="tech" class="mb-24 pt-12">
+            <h2 class="section-title text-4xl font-bold mb-10 text-white">Tech Stack</h2>
+            <div class="bg-[#161b22] p-8 rounded-xl shadow-lg border border-[#30363d]">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+                    <!-- Category 1: Frontend -->
+                    <div class="p-4 bg-[#21262d] rounded-lg">
+                        <h4 class="font-semibold text-indigo-300 mb-2">Frontend</h4>
+                        <ul class="text-sm text-gray-400 space-y-1">
+                            <li>JavaScript (ES6+)</li>
+                            <li>React / Angular</li>
+                            <li>HTML5 / CSS3</li>
+                        </ul>
+                    </div>
+                    <!-- Category 2: Styling/Design -->
+                    <div class="p-4 bg-[#21262d] rounded-lg">
+                        <h4 class="font-semibold text-indigo-300 mb-2">Styling & UX</h4>
+                        <ul class="text-sm text-gray-400 space-y-1">
+                            <li>Tailwind CSS</li>
+                            <li>Sass / PostCSS</li>
+                            <li>Figma / Adobe XD</li>
+                        </ul>
+                    </div>
+                    <!-- Category 3: Backend/DB -->
+                    <div class="p-4 bg-[#21262d] rounded-lg">
+                        <h4 class="font-semibold text-indigo-300 mb-2">Backend & DB</h4>
+                        <ul class="text-sm text-gray-400 space-y-1">
+                            <li>Node.js / Express</li>
+                            <li>Python (Basic)</li>
+                            <li>MongoDB / Firestore</li>
+                        </ul>
+                    </div>
+                    <!-- Category 4: Tools/VCS -->
+                    <div class="p-4 bg-[#21262d] rounded-lg">
+                        <h4 class="font-semibold text-indigo-300 mb-2">Tools & VCS</h4>
+                        <ul class="text-sm text-gray-400 space-y-1">
+                            <li>Git / GitHub</li>
+                            <li>Webpack / Vite</li>
+                            <li>VS Code</li>
+                        </ul>
+                    </div>
+                    <!-- Category 5: QA/Testing -->
+                    <div class="p-4 bg-[#21262d] rounded-lg col-span-2 sm:col-span-1 lg:col-span-1">
+                        <h4 class="font-semibold text-indigo-300 mb-2">QA</h4>
+                        <ul class="text-sm text-gray-400 space-y-1">
+                            <li>Jira / Trello</li>
+                            <li>Cypress / Jest</li>
+                            <li>Postman (API Testing)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->
-    <footer class="py-8">
-        <div class="container mx-auto px-6 text-center text-secondary">
-            <p>&copy; <span id="year"></span> morethanpixels. All Rights Reserved.</p>
-             <div class="flex justify-center space-x-6 mt-4">
-                <a href="#" class="hover:accent-color-text transition">Twitter</a>
-                <a href="#" class="hover:accent-color-text transition">Instagram</a>
-                <a href="#" class="hover:accent-color-text transition">Dribbble</a>
-            </div>
+    <footer class="bg-[#161b22] border-t border-[#30363d] mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+            <p>&copy; 2024 Portfolio. All rights reserved.</p>
+            <p class="mt-2">Built with HTML and Tailwind CSS.</p>
         </div>
     </footer>
-    
-    <!-- Back to Top Button -->
-    <a href="#home" id="back-to-top" class="fixed bottom-8 right-8 z-50 p-3 bg-primary text-primary-content rounded-full shadow-lg accent-bg-hover transition-all duration-300 opacity-0 pointer-events-none">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>
-    </a>
 
-    <!-- Project Details Modal -->
-    <div id="project-modal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 opacity-0 pointer-events-none">
-        <div id="modal-content-wrapper" class="modal-content glass-card w-11/12 max-w-4xl max-h-[90vh] overflow-y-auto transform scale-95">
-            <div class="sticky top-0 p-4 flex justify-between items-center z-10 glass-card rounded-b-none">
-                <h3 id="modal-title" class="text-2xl font-bold text-primary">Project Title</h3>
-                <button id="close-modal-button" class="text-secondary hover:text-primary transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-            </div>
-            <div class="p-8">
-                <img id="modal-image" src="" alt="Project Image" class="w-full h-auto rounded-lg mb-6 shadow-lg">
-                <p id="modal-category" class="accent-color-text font-semibold mb-2"></p>
-                <p id="modal-description" class="text-secondary leading-relaxed"></p>
-            </div>
-        </div>
-    </div>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
-            const themeToggle = document.getElementById('theme-toggle');
-            const body = document.body;
-
-            // --- Theme Toggle Logic ---
-            // On page load, check for saved theme
-            if (localStorage.getItem('theme') === 'dark') {
-                body.classList.add('dark');
-            }
-
-            themeToggle.addEventListener('click', () => {
-                body.classList.toggle('dark');
-                // Save theme preference
-                if (body.classList.contains('dark')) {
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    localStorage.setItem('theme', 'light');
-                }
-            });
-
-            // --- Unify Text Colors ---
-            // This small script sets the text color for buttons to match the primary text color of the theme.
-            const updateTextColors = () => {
-                const isDark = body.classList.contains('dark');
-                const primaryContentColor = isDark ? '#1a202c' : '#ffffff';
-                const primaryBgColor = isDark ? '#e2e8f0' : '#1a202c';
-                
-                document.querySelectorAll('.text-primary').forEach(el => el.style.color = 'var(--text-primary)');
-                document.querySelectorAll('.text-secondary').forEach(el => el.style.color = 'var(--text-secondary)');
-                document.querySelectorAll('.bg-primary').forEach(el => el.style.backgroundColor = primaryBgColor);
-                document.querySelectorAll('.text-primary-content').forEach(el => el.style.color = primaryContentColor);
-            };
-
-            // Call it on load and when toggling theme
-            updateTextColors();
-            new MutationObserver(updateTextColors).observe(body, { attributes: true, attributeFilter: ['class'] });
-
-            // --- Mobile Menu Toggle ---
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-
-            // --- Footer Year ---
-            document.getElementById('year').textContent = new Date().getFullYear();
-
-            // --- Intersection Observer for Fade-in Animations ---
-            const sections = document.querySelectorAll('.fade-in-section');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                    }
-                });
-            }, { rootMargin: '0px', threshold: 0.1 });
-            sections.forEach(section => observer.observe(section));
-            
-            // --- Active Nav Link Highlighting on Scroll ---
-            const navLinks = document.querySelectorAll('.nav-link');
-            const pageSections = document.querySelectorAll('section');
-
-            const highlightNavLink = () => {
-                let currentSection = '';
-                pageSections.forEach(section => {
-                    if (window.scrollY >= section.offsetTop - 100) {
-                        currentSection = section.getAttribute('id');
-                    }
-                });
-
-                navLinks.forEach(link => {
-                    link.classList.remove('accent-color-text');
-                    if (link.getAttribute('href').substring(1) === currentSection) {
-                        link.classList.add('accent-color-text');
-                    }
-                });
-            };
-            window.addEventListener('scroll', highlightNavLink);
-
-            // --- Modal and Portfolio Logic ---
-            const portfolioGrid = document.querySelector('.portfolio-grid');
-            const modal = document.getElementById('project-modal');
-            const modalContent = document.getElementById('modal-content-wrapper');
-            const closeModalButton = document.getElementById('close-modal-button');
-
-            const projects = [
-                { id: 1, title: 'CyberCorp Rebrand', category: 'Branding & Identity', img: 'https://placehold.co/800x600/8A2BE2/ffffff?text=CyberCorp', description: 'A complete overhaul of the CyberCorp brand, focusing on a futuristic and trustworthy aesthetic. The project included a new logo, color palette, typography system, and a comprehensive brand guide.', layout: 'grid-item-span-2 grid-item-row-span-2' },
-                { id: 2, title: 'Nova Launcher UI', category: 'UI/UX Design', img: 'https://placehold.co/800x600/ff4500/ffffff?text=Nova+UI', description: 'User interface design for a next-generation mobile launcher. We focused on creating a seamless, intuitive, and customizable user experience.', layout: '' },
-                { id: 3, title: 'Aether Animations', category: 'Motion Graphics', img: 'https://placehold.co/800x600/32cd32/ffffff?text=Aether+FX', description: 'A series of promotional animations for the Aether product launch. The animations highlighted key features through dynamic and engaging motion graphics.', layout: '' },
-                { id: 4, title: 'Quantum Website', category: 'Web Design', img: 'https://placehold.co/800x600/4169e1/ffffff?text=Quantum+Web', description: 'A fully responsive marketing website for Quantum Solutions. The design emphasizes clarity, speed, and cutting-edge technology.', layout: 'grid-item-span-2' },
-                { id: 5, title: 'Zenith Packaging', category: 'Packaging Design', img: 'https://placehold.co/800x600/ff8c00/ffffff?text=Zenith', description: 'Elegant and sustainable packaging design for the Zenith line of luxury goods. The design uses minimalist principles and premium materials.', layout: '' },
-                { id: 6, title: 'Momentum App', category: 'UI/UX Design', img: 'https://placehold.co/800x600/20b2aa/ffffff?text=Momentum', description: 'A productivity app designed to help users focus and build momentum. The UI is clean, distraction-free, and motivating.', layout: '' },
-            ];
-
-            projects.forEach(project => {
-                const item = document.createElement('div');
-                item.className = `group relative rounded-xl overflow-hidden cursor-pointer fade-in-section glass-card !p-0 ${project.layout}`;
-                item.innerHTML = `
-                    <img src="${project.img}" alt="${project.title}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out">
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-end p-6" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
-                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            <p class="text-sm font-semibold" style="color:#d8b4fe;">${project.category}</p>
-                            <h3 class="text-xl font-bold text-white text-shadow">${project.title}</h3>
-                        </div>
-                    </div>
-                `;
-                item.addEventListener('click', () => openModal(project));
-                portfolioGrid.appendChild(item);
-            });
-            
-            document.querySelectorAll('.fade-in-section').forEach(section => observer.observe(section));
-
-            function openModal(project) {
-                document.getElementById('modal-title').textContent = project.title;
-                document.getElementById('modal-image').src = project.img.replace('800x600', '1200x800');
-                document.getElementById('modal-category').textContent = project.category;
-                document.getElementById('modal-description').textContent = project.description;
-                
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                modalContent.classList.remove('scale-95');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeModal() {
-                modal.classList.add('opacity-0', 'pointer-events-none');
-                modalContent.classList.add('scale-95');
-                document.body.style.overflow = '';
-            }
-
-            closeModalButton.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeModal();
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeModal();
-            });
-
-            // --- Back to Top Button Logic ---
-            const backToTopButton = document.getElementById('back-to-top');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 300) {
-                    backToTopButton.classList.remove('opacity-0', 'pointer-events-none');
-                } else {
-                    backToTopButton.classList.add('opacity-0', 'pointer-events-none');
-                }
-            });
-        });
-    </script>
 </body>
 </html>
