@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7 Days Blood Moons - Intelligence Dashboard</title>
+    <title>7DBM Player Count Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -14,161 +14,202 @@
             color: #e1e1e1;
         }
 
-        .steam-card {
-            background: linear-gradient(135deg, #1b2838 0%, #171a21 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
-        }
-
-        .steam-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border-color: rgba(102, 192, 244, 0.4);
-        }
-
         .pulse-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background-color: #a3ff00;
             border-radius: 50%;
             display: inline-block;
             margin-right: 8px;
-            box-shadow: 0 0 8px #a3ff00;
+            box-shadow: 0 0 12px #a3ff00;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.7; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.7; }
+            0% { transform: scale(0.9); opacity: 0.7; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.7; }
         }
 
-        .loading-shimmer {
-            background: linear-gradient(90deg, #1b2838 25%, #2a3f5a 50%, #1b2838 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        /* Styling for the centered logo */
         .game-logo {
-            max-width: 400px;
+            max-width: 450px;
             width: 100%;
-            filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.2));
+            filter: drop-shadow(0 0 30px rgba(239, 68, 68, 0.15));
         }
 
-        .chart-container {
+        .insight-card {
             background: #171a21;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            overflow: hidden;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .insight-card:hover {
+            border-color: rgba(102, 192, 244, 0.3);
+            background: #1c2129;
         }
 
         .total-counter-glow {
-            text-shadow: 0 0 15px rgba(163, 255, 0, 0.4);
+            text-shadow: 0 0 20px rgba(163, 255, 0, 0.3);
+        }
+
+        .stat-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #6b7280;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .system-clock {
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            letter-spacing: 0.1em;
+            color: #66c0f4;
+            box-shadow: inset 0 0 10px rgba(102, 192, 244, 0.05);
         }
     </style>
 </head>
 <body class="min-h-screen p-6 md:p-12">
 
     <div class="max-w-6xl mx-auto">
-        <!-- Centered Logo and Title Header -->
-        <header class="mb-8 flex flex-col items-center text-center">
+        <!-- Main Logo Header -->
+        <header class="mb-12 flex flex-col items-center text-center">
             <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2312280/logo.png" 
                  alt="7 Days Blood Moons Logo" 
-                 class="game-logo mb-4"
-                 onerror="this.style.display='none'; document.getElementById('fallback-title').classList.remove('hidden');">
-            
-            <h1 id="fallback-title" class="hidden text-4xl font-bold text-white mb-2 tracking-tighter uppercase">7 Days Blood Moons</h1>
-            
-            <h2 class="text-xl md:text-2xl font-light text-[#66c0f4] tracking-[0.2em] uppercase mb-8">
-                Live Player Count Tracker
-            </h2>
+                 class="game-logo mb-10">
 
-            <button onclick="fetchAllData()" class="bg-[#66c0f4] hover:bg-[#4ea8e0] text-white px-8 py-3 rounded-full font-bold transition-all flex items-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
-                Sync Live Data
-            </button>
-
-            <!-- Total Players Display -->
-            <div id="total-count-display" class="mt-12 mb-8 opacity-0 transition-opacity duration-1000 flex flex-col items-center">
-                <div class="h-px w-24 bg-gradient-to-r from-transparent via-[#a3ff00]/50 to-transparent mb-4"></div>
-                <p class="text-gray-500 uppercase tracking-[0.4em] text-[10px] font-bold mb-2">Aggregate Population</p>
-                <div class="flex items-baseline gap-3">
-                    <span id="total-players-sum" class="text-5xl md:text-6xl font-black text-white total-counter-glow tracking-tighter">0</span>
-                    <span class="text-gray-400 font-light tracking-widest text-xs uppercase">Concurrent Survivors</span>
+            <!-- The Big Counter -->
+            <div id="total-count-display" class="mb-8 transition-all duration-1000 flex flex-col items-center">
+                <p class="text-gray-500 uppercase tracking-[0.4em] text-[10px] font-bold mb-4">Live Global Population</p>
+                <div class="flex items-center gap-6">
+                    <span id="total-players-sum" class="text-7xl md:text-8xl font-black text-white total-counter-glow tracking-tighter">--</span>
+                    <div class="flex flex-col items-start text-left">
+                        <span class="text-[#a3ff00] font-bold tracking-widest text-sm uppercase flex items-center">
+                            <span class="pulse-dot"></span> Online
+                        </span>
+                        <span class="text-gray-500 font-light text-xs uppercase">Survivors Detected</span>
+                    </div>
                 </div>
-                <div class="h-px w-24 bg-gradient-to-r from-transparent via-[#a3ff00]/50 to-transparent mt-6"></div>
             </div>
+
+            <!-- Real-time System Clock -->
+            <div class="mb-10">
+                <div id="clock" class="system-clock text-lg font-bold">00:00:00</div>
+                <p class="text-[9px] text-gray-600 uppercase tracking-widest mt-2 font-bold">Local Station Time</p>
+            </div>
+
+            <button onclick="fetchAllData()" class="bg-[#66c0f4] hover:bg-[#4ea8e0] text-white px-10 py-3 rounded-full font-bold transition-all flex items-center gap-3 shadow-lg shadow-blue-500/20 active:scale-95">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M21 21v-5h-5"/></svg>
+                Sync Real-time Data
+            </button>
         </header>
 
-        <!-- Status Message Box -->
-        <div id="status-box" class="hidden max-w-2xl mx-auto mb-10 p-4 rounded-lg text-sm border"></div>
-
-        <!-- Stats Grid -->
-        <div id="game-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            <!-- Loading States -->
-            <div class="steam-card rounded-xl overflow-hidden h-[450px] flex flex-col">
-                <div class="h-48 loading-shimmer"></div>
-                <div class="p-6 space-y-4">
-                    <div class="h-8 w-3/4 loading-shimmer rounded"></div>
-                    <div class="h-24 w-full loading-shimmer rounded"></div>
-                </div>
+        <!-- Playerbase Insights Section -->
+        <section class="mt-16 mb-24">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="h-px flex-grow bg-white/5"></div>
+                <h3 class="text-xl font-bold uppercase tracking-[0.2em] text-gray-400">Playerbase Insights</h3>
+                <div class="h-px flex-grow bg-white/5"></div>
             </div>
-            <div class="steam-card rounded-xl overflow-hidden h-[450px] flex flex-col">
-                <div class="h-48 loading-shimmer"></div>
-                <div class="p-6 space-y-4">
-                    <div class="h-8 w-3/4 loading-shimmer rounded"></div>
-                    <div class="h-24 w-full loading-shimmer rounded"></div>
-                </div>
-            </div>
-        </div>
 
-        <!-- SteamDB Embedded Charts Section -->
-        <section class="mt-20 border-t border-white/10 pt-16">
-            <h3 class="text-2xl font-bold text-white mb-10 flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#66c0f4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 20-4-4h-3V4l-4 4H4"/><path d="M12 4v16"/></svg>
-                Historical Trends (SteamDB)
-            </h3>
-            
-            <div class="space-y-12">
-                <!-- Main Game Chart -->
-                <div class="chart-container">
-                    <div class="bg-white/5 px-6 py-3 border-b border-white/5 flex justify-between items-center">
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">7 Days Blood Moons (Main)</span>
-                        <span class="text-[10px] text-gray-600">APPID: 2312280</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Main Game Insights -->
+                <div class="insight-card">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h4 class="font-bold text-white tracking-tight">7 Days Blood Moons</h4>
+                            <p class="text-[10px] text-gray-500 font-bold uppercase">Standard Edition</p>
+                        </div>
+                        <span class="bg-[#66c0f4]/10 text-[#66c0f4] text-[10px] px-2 py-1 rounded font-bold">2312280</span>
                     </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="stat-label">Current</p>
+                            <p id="main-current" class="stat-value text-[#a3ff00]">--</p>
+                        </div>
+                        <div>
+                            <p class="stat-label">Status</p>
+                            <p class="stat-value text-gray-400 text-lg uppercase font-semibold">Live</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo Insights -->
+                <div class="insight-card">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h4 class="font-bold text-white tracking-tight">Blood Moons Demo</h4>
+                            <p class="text-[10px] text-gray-500 font-bold uppercase">Public Access</p>
+                        </div>
+                        <span class="bg-red-500/10 text-red-400 text-[10px] px-2 py-1 rounded font-bold">4213710</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="stat-label">Current</p>
+                            <p id="demo-current" class="stat-value text-[#a3ff00]">--</p>
+                        </div>
+                        <div>
+                            <p class="stat-label">Access</p>
+                            <p class="stat-value text-gray-400 text-lg uppercase font-semibold">Active</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SteamDB Charts -->
+        <section class="mt-20 border-t border-white/5 pt-16 mb-20">
+            <h3 class="text-xl font-bold text-gray-400 mb-10 flex items-center gap-3 uppercase tracking-widest">
+                Historical Telemetry
+            </h3>
+            <div class="space-y-12">
+                <div class="bg-[#171a21] border border-white/5 rounded-xl overflow-hidden shadow-2xl">
                     <iframe src="https://steamdb.info/embed/?appid=2312280" height="389" style="border:0;overflow:hidden;width:100%" loading="lazy"></iframe>
                 </div>
-
-                <!-- Demo Chart -->
-                <div class="chart-container">
-                    <div class="bg-white/5 px-6 py-3 border-b border-white/5 flex justify-between items-center">
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">7 Days Blood Moons (Demo)</span>
-                        <span class="text-[10px] text-gray-600">APPID: 4213710</span>
-                    </div>
+                <div class="bg-[#171a21] border border-white/5 rounded-xl overflow-hidden shadow-2xl">
                     <iframe src="https://steamdb.info/embed/?appid=4213710" height="389" style="border:0;overflow:hidden;width:100%" loading="lazy"></iframe>
                 </div>
             </div>
         </section>
 
-        <footer class="mt-20 text-center text-gray-500 text-sm border-t border-white/5 pt-8 pb-12">
-            <p class="text-[11px] opacity-30">2025 - Phunkninja</p>
+        <footer class="text-center pb-12 opacity-30">
+            <p class="text-[11px] font-bold tracking-widest">2025 - PHUNKNINJA</p>
         </footer>
     </div>
 
     <script>
+        // Update document title
+        document.title = "7DBM Player Count Tracker";
+
         const appIds = [2312280, 4213710];
         
-        // Failover proxy system
         const proxyServices = [
             (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
             (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`
         ];
+
+        // --- Clock Logic ---
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const clockEl = document.getElementById('clock');
+            if (clockEl) clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
         async function fetchWithFallback(targetUrl) {
             let lastError = null;
@@ -181,133 +222,50 @@
                     clearTimeout(timeoutId);
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     return await response.json();
-                } catch (err) {
-                    lastError = err;
-                }
+                } catch (err) { lastError = err; }
             }
-            throw lastError || new Error("Connection failed");
+            throw lastError || new Error("Failed");
         }
 
-        function showStatus(message, isError = true) {
-            const box = document.getElementById('status-box');
-            if (!box) return;
-            box.innerText = message;
-            box.className = `max-w-2xl mx-auto mb-10 p-4 rounded-lg text-sm border ${
-                isError ? 'bg-red-500/10 text-red-400 border-red-500/30' : 'bg-blue-500/10 text-blue-400 border-blue-500/30'
-            }`;
-            box.classList.remove('hidden');
-            setTimeout(() => box.classList.add('hidden'), 8000);
-        }
-
-        async function fetchGameData(id) {
-            const storeUrl = `https://store.steampowered.com/api/appdetails?appids=${id}`;
-            const playersUrl = `https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=${id}`;
-            
+        async function fetchPlayerCount(id) {
+            const url = `https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=${id}`;
             try {
-                const [storeData, playersData] = await Promise.all([
-                    fetchWithFallback(storeUrl),
-                    fetchWithFallback(playersUrl)
-                ]);
-
-                const gameResult = storeData[id];
-                const playerCount = playersData.response?.player_count || 0;
-
-                if (!gameResult || !gameResult.success) {
-                    return { 
-                        html: createErrorCard(id, "Content restricted. App may be unreleased or hidden."),
-                        count: 0
-                    };
-                }
-
-                return {
-                    html: createGameCard(gameResult.data, playerCount),
-                    count: playerCount
-                };
-            } catch (error) {
-                return {
-                    html: createErrorCard(id, `Proxy error: ${error.message}`),
-                    count: 0
-                };
-            }
-        }
-
-        function createGameCard(game, players) {
-            const isDemo = game.type === 'demo';
-            const price = game.is_free ? "Free" : (game.price_overview ? game.price_overview.final_formatted : "Coming Soon");
-            
-            return `
-                <div class="steam-card rounded-xl overflow-hidden flex flex-col">
-                    <div class="relative overflow-hidden group h-48">
-                        <img src="${game.header_image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="${game.name}">
-                        <div class="absolute top-4 left-4">
-                            <span class="bg-black/80 backdrop-blur-md text-[9px] font-black px-3 py-1 rounded-sm text-white uppercase tracking-widest border border-white/20">
-                                ${isDemo ? 'DEMO VERSION' : 'FULL GAME'}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <div class="flex items-center text-sm font-bold text-[#a3ff00] mb-3">
-                            <span class="pulse-dot"></span>
-                            ${players.toLocaleString()} IN-GAME
-                        </div>
-                        <h2 class="text-2xl font-bold text-white mb-2 tracking-tight">${game.name}</h2>
-                        <p class="text-gray-400 text-sm line-clamp-3 mb-8">
-                            ${game.short_description}
-                        </p>
-                        <div class="mt-auto pt-4 border-t border-white/5 flex items-end justify-between">
-                            <div>
-                                <p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">App ID ${game.steam_appid}</p>
-                                <p class="text-xl font-bold text-[#66c0f4]">${price}</p>
-                            </div>
-                            <a href="https://store.steampowered.com/app/${game.steam_appid}" target="_blank" class="bg-[#323f4c] hover:bg-[#4b5a6a] text-white px-5 py-2 rounded text-xs font-bold transition-all uppercase tracking-wider">
-                                Store
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function createErrorCard(id, msg) {
-            return `
-                <div class="steam-card rounded-xl p-8 flex flex-col items-center justify-center text-center opacity-60 min-h-[400px]">
-                    <div class="w-12 h-12 rounded-full bg-yellow-500/10 flex items-center justify-center mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-white italic">Node Unavailable</h3>
-                    <p class="text-gray-500 text-xs mt-1 mb-4 tracking-tighter">App ID: ${id}</p>
-                    <p class="text-gray-400 text-xs">${msg}</p>
-                </div>
-            `;
+                const data = await fetchWithFallback(url);
+                return data.response?.player_count || 0;
+            } catch (e) { return 0; }
         }
 
         async function fetchAllData() {
-            const grid = document.getElementById('game-grid');
-            const totalDisplay = document.getElementById('total-count-display');
             const totalSum = document.getElementById('total-players-sum');
+            const totalDisplay = document.getElementById('total-count-display');
+            const mainCurrent = document.getElementById('main-current');
+            const demoCurrent = document.getElementById('demo-current');
             
-            if (!grid) return;
-            grid.style.opacity = '0.3';
-            totalDisplay.style.opacity = '0.3';
+            if (totalDisplay) totalDisplay.style.opacity = '0.3';
             
             try {
-                const results = await Promise.all(appIds.map(id => fetchGameData(id)));
+                const [count1, count2] = await Promise.all(appIds.map(id => fetchPlayerCount(id)));
+                const total = count1 + count2;
                 
-                // Update Grid
-                grid.innerHTML = results.map(r => r.html).join('');
+                if (totalSum) animateValue(totalSum, 0, total, 1500);
+                if (mainCurrent) mainCurrent.innerText = count1.toLocaleString();
+                if (demoCurrent) demoCurrent.innerText = count2.toLocaleString();
                 
-                // Update Total Sum
-                const totalPlayers = results.reduce((acc, curr) => acc + curr.count, 0);
-                if (totalSum) {
-                    totalSum.innerText = totalPlayers.toLocaleString();
-                }
-                
-                totalDisplay.style.opacity = '1';
+                if (totalDisplay) totalDisplay.style.opacity = '1';
             } catch (err) {
-                showStatus("Network Error: All proxy gateways are currently blocked or down.");
-            } finally {
-                grid.style.opacity = '1';
+                console.error(err);
             }
+        }
+
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
         }
 
         window.onload = () => setTimeout(fetchAllData, 200);
