@@ -3,242 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>More Than Pixels</title>
-    <!-- Load Tailwind CSS -->
+    <title>7 Days Blood Moons - Intelligence Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configure Tailwind to use Inter font -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
         body {
             font-family: 'Inter', sans-serif;
-            /* Updated background to include a subtle radial gradient 'wave' effect */
-            background-color: #0d1117; /* Dark background base color */
-            background-image: 
-                radial-gradient(
-                    ellipse at 50% 100%, 
-                    rgba(79, 70, 229, 0.12) 0%, /* Stronger indigo glow at the bottom/center */
-                    transparent 60%
-                ),
-                radial-gradient(
-                    ellipse at 10% 20%, 
-                    rgba(79, 70, 229, 0.08) 0%, /* Subtle glow top-left */
-                    transparent 40%
-                );
-            background-attachment: fixed; /* Keeps the effect static relative to the viewport */
-            color: #c9d1d9; /* Light text */
+            background-color: #0b0e14;
+            color: #e1e1e1;
         }
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 50px;
-            height: 3px;
-            background: #4F46E5; /* Indigo accent */
-            margin-top: 8px;
-            border-radius: 9999px;
+
+        .steam-card {
+            background: linear-gradient(135deg, #1b2838 0%, #171a21 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+        }
+
+        .steam-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(102, 192, 244, 0.4);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #a3ff00;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 8px #a3ff00;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+
+        .loading-shimmer {
+            background: linear-gradient(90deg, #1b2838 25%, #2a3f5a 50%, #1b2838 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Styling for the centered logo */
+        .game-logo {
+            max-width: 400px;
+            width: 100%;
+            filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.2));
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="min-h-screen p-6 md:p-12">
 
-    <!-- Header & Navigation -->
-    <header class="sticky top-0 z-50 bg-[#161b22] border-b border-[#30363d] shadow-lg">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo/Name -->
-                <div class="flex-shrink-0">
-                    <span class="text-xl font-bold text-indigo-400">More Than Pixels</span>
-                </div>
-                <!-- Desktop Navigation -->
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#web" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Web Design</a>
-                        <a href="#graphic" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Graphic Design</a>
-                        <a href="#qa" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Quality Assurance</a>
-                        <a href="#tech" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">Tech Stack</a>
-                    </div>
-                </div>
-                <!-- Mobile Menu Button (Optional: requires JS, but for simplicity, we keep it hidden) -->
-                <div class="-mr-2 flex md:hidden">
-                    <!-- For a single file, adding complex JS toggles is often avoided, so we'll rely on scroll -->
+    <div class="max-w-6xl mx-auto">
+        <!-- Centered Logo and Title Header -->
+        <header class="mb-16 flex flex-col items-center text-center">
+            <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2312280/logo.png" 
+                 alt="7 Days Blood Moons Logo" 
+                 class="game-logo mb-4"
+                 onerror="this.style.display='none'; document.getElementById('fallback-title').classList.remove('hidden');">
+            
+            <h1 id="fallback-title" class="hidden text-4xl font-bold text-white mb-2 tracking-tighter uppercase">7 Days Blood Moons</h1>
+            
+            <h2 class="text-xl md:text-2xl font-light text-[#66c0f4] tracking-[0.2em] uppercase mb-8">
+                Live Player Count Tracker
+            </h2>
+
+            <button onclick="fetchAllData()" class="bg-[#66c0f4] hover:bg-[#4ea8e0] text-white px-8 py-3 rounded-full font-bold transition-all flex items-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+                Sync Live Data
+            </button>
+        </header>
+
+        <!-- Status Message Box -->
+        <div id="status-box" class="hidden max-w-2xl mx-auto mb-10 p-4 rounded-lg text-sm border"></div>
+
+        <!-- Stats Grid -->
+        <div id="game-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Loading States -->
+            <div class="steam-card rounded-xl overflow-hidden h-[450px] flex flex-col">
+                <div class="h-48 loading-shimmer"></div>
+                <div class="p-6 space-y-4">
+                    <div class="h-8 w-3/4 loading-shimmer rounded"></div>
+                    <div class="h-24 w-full loading-shimmer rounded"></div>
                 </div>
             </div>
-        </nav>
-    </header>
-
-    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-
-        <!-- Hero Section -->
-        <section class="text-center mb-24 py-16 bg-[#161b22] rounded-xl shadow-2xl border border-[#30363d]">
-            <h1 class="text-5xl sm:text-7xl font-extrabold text-white mb-4">
-                Creative & Technical
-            </h1>
-            <p class="text-xl text-gray-400 max-w-2xl mx-auto">
-                Two decades blending graphic design, web design & quality assurance.
-            </p>
-            <div class="mt-8">
-                <a href="#web" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 shadow-md transition duration-150 ease-in-out">
-                    View My Work
-                </a>
-            </div>
-        </section>
-
-        <!-- Web Design Section -->
-        <section id="web" class="mb-24 pt-12">
-            <h2 class="section-title text-4xl font-bold mb-10 text-white">Web Design & UX</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Project 1 Mockup -->
-                <div class="bg-[#161b22] p-6 rounded-xl shadow-lg border border-[#30363d] hover:border-indigo-500 transition duration-300">
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-3">Responsive E-Commerce Platform</h3>
-                    <p class="text-gray-400 text-sm mb-4">Focus on mobile-first design, clean navigation, and high conversion UX funnels. Used **React** and **Tailwind CSS** for component-based architecture.</p>
-                    <ul class="text-sm text-gray-500 list-disc ml-5">
-                        <li>Designed 5 core templates</li>
-                        <li>Implemented A/B testing variations</li>
-                        <li>Improved page load time by 30%</li>
-                    </ul>
-                </div>
-                <!-- Project 2 Mockup -->
-                <div class="bg-[#161b22] p-6 rounded-xl shadow-lg border border-[#30363d] hover:border-indigo-500 transition duration-300">
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-3">SaaS Dashboard Redesign</h3>
-                    <p class="text-gray-400 text-sm mb-4">Simplified complex data visualization using **D3.js** charts and a clear information hierarchy. Goal: reduce user training time.</p>
-                    <ul class="text-sm text-gray-500 list-disc ml-5">
-                        <li>Developed wireframes and prototypes</li>
-                        <li>Reduced cognitive load by 40%</li>
-                        <li>Custom icon library development</li>
-                    </ul>
-                </div>
-                <!-- Project 3 Mockup -->
-                <div class="bg-[#161b22] p-6 rounded-xl shadow-lg border border-[#30363d] hover:border-indigo-500 transition duration-300">
-                    <h3 class="text-xl font-semibold text-indigo-400 mb-3">Portfolio Site Generator (This Site)</h3>
-                    <p class="text-gray-400 text-sm mb-4">Built for speed and adaptability using raw HTML, modern CSS practices, and minimal JavaScript for fluid performance.</p>
-                    <ul class="text-sm text-gray-500 list-disc ml-5">
-                        <li>100% Core Web Vitals compliant</li>
-                        <li>Pure utility-first CSS (Tailwind)</li>
-                        <li>Accessibility (WCAG) compliance focus</li>
-                    </ul>
+            <div class="steam-card rounded-xl overflow-hidden h-[450px] flex flex-col">
+                <div class="h-48 loading-shimmer"></div>
+                <div class="p-6 space-y-4">
+                    <div class="h-8 w-3/4 loading-shimmer rounded"></div>
+                    <div class="h-24 w-full loading-shimmer rounded"></div>
                 </div>
             </div>
-        </section>
-
-        <!-- Graphic Design Section -->
-        <section id="graphic" class="mb-24 pt-12">
-            <h2 class="section-title text-4xl font-bold mb-10 text-white">Graphic Design & Branding</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-[#161b22] p-6 rounded-xl shadow-lg border border-[#30363d]">
-                    <h3 class="text-2xl font-semibold text-white mb-3">Brand Identity Systems</h3>
-                    <p class="text-gray-400 mb-4">Created comprehensive brand style guides including logo usage, color palettes (**CMYK/HEX**), and typography stacks for a few clients.</p>
-                    <ul class="text-sm text-gray-500 list-disc ml-5">
-                        <li>Logo design and vector optimization</li>
-                        <li>Print collateral (business cards, letterheads)</li>
-                        <li>Digital asset creation (social media banners)</li>
-                    </ul>
-                </div>
-                <div class="bg-[#161b22] p-6 rounded-xl shadow-lg border border-[#30363d]">
-                    <h3 class="text-2xl font-semibold text-white mb-3">Marketing Collateral & Illustration</h3>
-                    <p class="text-gray-400 mb-4">Designed cohesive visual assets for product launches, including infographics, email headers, and custom digital illustrations.</p>
-                    <ul class="text-sm text-gray-500 list-disc ml-5">
-                        <li>Adobe Creative Suite proficiency (Ps, Ai, Id)</li>
-                        <li>Design for web optimization (SVG, WebP)</li>
-                        <li>Maintaining brand consistency across platforms</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Quality Assurance Section -->
-        <section id="qa" class="mb-24 pt-12">
-            <h2 class="section-title text-4xl font-bold mb-10 text-white">Quality Assurance & Testing</h2>
-            <div class="bg-[#161b22] p-8 rounded-xl shadow-lg border border-[#30363d]">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div>
-                        <h3 class="text-2xl font-semibold text-indigo-400 mb-2">Methodologies</h3>
-                        <ul class="text-gray-400 space-y-1 text-sm">
-                            <li>Manual & Exploratory Testing</li>
-                            <li>Mantis/JIRA Environments</li>
-                            <li>Black-Box and White-Box Testing</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-semibold text-indigo-400 mb-2">Tools & Reporting</h3>
-                        <ul class="text-gray-400 space-y-1 text-sm">
-                            <li>**Jira** & **Trello** for bug tracking</li>
-                            <li>Clear, reproducible bug reports (Steps, Expected, Actual)</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-semibold text-indigo-400 mb-2">Key Skills</h3>
-                        <ul class="text-gray-400 space-y-1 text-sm">
-                            <li>Cross-Browser Compatibility Testing</li>
-                            <li>Regression & Load Testing Fundamentals</li>
-                            <li>Detail-oriented documentation skills</li>
-                        </ul>
-                    </div>
-                </div>
-                <p class="mt-6 text-gray-500 italic text-sm border-t border-[#30363d] pt-4">My QA experience ensures all design and development work is robust, accessible, and error-free.</p>
-            </div>
-        </section>
-
-        <!-- Tech Stack Section -->
-        <section id="tech" class="mb-24 pt-12">
-            <h2 class="section-title text-4xl font-bold mb-10 text-white">Tech Stack</h2>
-            <div class="bg-[#161b22] p-8 rounded-xl shadow-lg border border-[#30363d]">
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-                    <!-- Category 1: Frontend -->
-                    <div class="p-4 bg-[#21262d] rounded-lg">
-                        <h4 class="font-semibold text-indigo-300 mb-2">Frontend</h4>
-                        <ul class="text-sm text-gray-400 space-y-1">
-                            <li>JavaScript (ES6+)</li>
-                            <li>React / Angular</li>
-                            <li>HTML5 / CSS3</li>
-                        </ul>
-                    </div>
-                    <!-- Category 2: Styling/Design -->
-                    <div class="p-4 bg-[#21262d] rounded-lg">
-                        <h4 class="font-semibold text-indigo-300 mb-2">Styling & UX</h4>
-                        <ul class="text-sm text-gray-400 space-y-1">
-                            <li>Tailwind CSS</li>
-                            <li>Sass / PostCSS</li>
-                            <li>Figma / Adobe XD</li>
-                        </ul>
-                    </div>
-                    <!-- Category 3: Backend/DB -->
-                    <div class="p-4 bg-[#21262d] rounded-lg">
-                        <h4 class="font-semibold text-indigo-300 mb-2">Backend & DB</h4>
-                        <ul class="text-sm text-gray-400 space-y-1">
-                            <li>Node.js / Express</li>
-                            <li>Python (Basic)</li>
-                            <li>MongoDB / Firestore</li>
-                        </ul>
-                    </div>
-                    <!-- Category 4: Tools/VCS -->
-                    <div class="p-4 bg-[#21262d] rounded-lg">
-                        <h4 class="font-semibold text-indigo-300 mb-2">Tools & VCS</h4>
-                        <ul class="text-sm text-gray-400 space-y-1">
-                            <li>Git / GitHub</li>
-                            <li>Webpack / Vite</li>
-                            <li>VS Code</li>
-                        </ul>
-                    </div>
-                    <!-- Category 5: QA/Testing -->
-                    <div class="p-4 bg-[#21262d] rounded-lg col-span-2 sm:col-span-1 lg:col-span-1">
-                        <h4 class="font-semibold text-indigo-300 mb-2">QA</h4>
-                        <ul class="text-sm text-gray-400 space-y-1">
-                            <li>Jira / Trello</li>
-                            <li>Cypress / Jest</li>
-                            <li>Postman (API Testing)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-[#161b22] border-t border-[#30363d] mt-12 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
-            <p>&copy; 2024 Portfolio. All rights reserved.</p>
-            <p class="mt-2">Built with HTML and Tailwind CSS.</p>
         </div>
-    </footer>
 
+        <footer class="mt-20 text-center text-gray-500 text-sm border-t border-white/5 pt-8">
+            <p>Tracking App IDs: 2312280 (Standard) and 4213710 (Demo)</p>
+            <p class="mt-2 text-xs opacity-40 uppercase tracking-widest">Global Telemetry Service v2.1</p>
+        </footer>
+    </div>
+
+    <script>
+        const appIds = [2312280, 4213710];
+        
+        // Failover proxy system
+        const proxyServices = [
+            (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+            (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`
+        ];
+
+        async function fetchWithFallback(targetUrl) {
+            let lastError = null;
+            for (const proxyFn of proxyServices) {
+                const proxiedUrl = proxyFn(targetUrl);
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 8000);
+                    const response = await fetch(proxiedUrl, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return await response.json();
+                } catch (err) {
+                    lastError = err;
+                }
+            }
+            throw lastError || new Error("Connection failed");
+        }
+
+        function showStatus(message, isError = true) {
+            const box = document.getElementById('status-box');
+            if (!box) return;
+            box.innerText = message;
+            box.className = `max-w-2xl mx-auto mb-10 p-4 rounded-lg text-sm border ${
+                isError ? 'bg-red-500/10 text-red-400 border-red-500/30' : 'bg-blue-500/10 text-blue-400 border-blue-500/30'
+            }`;
+            box.classList.remove('hidden');
+            setTimeout(() => box.classList.add('hidden'), 8000);
+        }
+
+        async function fetchGameData(id) {
+            const storeUrl = `https://store.steampowered.com/api/appdetails?appids=${id}`;
+            const playersUrl = `https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=${id}`;
+            
+            try {
+                const [storeData, playersData] = await Promise.all([
+                    fetchWithFallback(storeUrl),
+                    fetchWithFallback(playersUrl)
+                ]);
+
+                const gameResult = storeData[id];
+                if (!gameResult || !gameResult.success) {
+                    return createErrorCard(id, "Content restricted. App may be unreleased or hidden.");
+                }
+
+                return createGameCard(gameResult.data, playersData.response?.player_count || 0);
+            } catch (error) {
+                return createErrorCard(id, `Proxy error: ${error.message}`);
+            }
+        }
+
+        function createGameCard(game, players) {
+            const isDemo = game.type === 'demo';
+            const price = game.is_free ? "Free" : (game.price_overview ? game.price_overview.final_formatted : "Coming Soon");
+            
+            return `
+                <div class="steam-card rounded-xl overflow-hidden flex flex-col">
+                    <div class="relative overflow-hidden group h-48">
+                        <img src="${game.header_image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="${game.name}">
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-black/80 backdrop-blur-md text-[9px] font-black px-3 py-1 rounded-sm text-white uppercase tracking-widest border border-white/20">
+                                ${isDemo ? 'DEMO VERSION' : 'FULL GAME'}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="flex items-center text-sm font-bold text-[#a3ff00] mb-3">
+                            <span class="pulse-dot"></span>
+                            ${players.toLocaleString()} IN-GAME
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2 tracking-tight">${game.name}</h2>
+                        <p class="text-gray-400 text-sm line-clamp-3 mb-8">
+                            ${game.short_description}
+                        </p>
+                        <div class="mt-auto pt-4 border-t border-white/5 flex items-end justify-between">
+                            <div>
+                                <p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">App ID ${game.steam_appid}</p>
+                                <p class="text-xl font-bold text-[#66c0f4]">${price}</p>
+                            </div>
+                            <a href="https://store.steampowered.com/app/${game.steam_appid}" target="_blank" class="bg-[#323f4c] hover:bg-[#4b5a6a] text-white px-5 py-2 rounded text-xs font-bold transition-all uppercase tracking-wider">
+                                Store
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createErrorCard(id, msg) {
+            return `
+                <div class="steam-card rounded-xl p-8 flex flex-col items-center justify-center text-center opacity-60 min-h-[400px]">
+                    <div class="w-12 h-12 rounded-full bg-yellow-500/10 flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white italic">Node Unavailable</h3>
+                    <p class="text-gray-500 text-xs mt-1 mb-4 tracking-tighter">App ID: ${id}</p>
+                    <p class="text-gray-400 text-xs">${msg}</p>
+                </div>
+            `;
+        }
+
+        async function fetchAllData() {
+            const grid = document.getElementById('game-grid');
+            if (!grid) return;
+            grid.style.opacity = '0.3';
+            
+            try {
+                const results = await Promise.all(appIds.map(id => fetchGameData(id)));
+                grid.innerHTML = results.join('');
+            } catch (err) {
+                showStatus("Network Error: All proxy gateways are currently blocked or down.");
+            } finally {
+                grid.style.opacity = '1';
+            }
+        }
+
+        window.onload = () => setTimeout(fetchAllData, 200);
+    </script>
 </body>
 </html>
