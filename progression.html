@@ -3,304 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7DBM Game Session Stats</title>
+    <title>7 Days Blood Moons - Intelligence Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1a1a2e; /* Dark theme background */
-            color: #e4e4e7;
+            background-color: #0b0e14;
+            color: #e1e1e1;
         }
-        .stat-card {
-            background-color: #2c2c44;
-            transition: transform 0.2s, box-shadow 0.2s;
+
+        .steam-card {
+            background: linear-gradient(135deg, #1b2838 0%, #171a21 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
         }
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+
+        .steam-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(102, 192, 244, 0.4);
         }
-        .header-bg {
-            background-image: linear-gradient(135deg, #4747a1 0%, #1a1a2e 100%);
-        }
-        /* Custom scrollbar style for dark theme */
-        ::-webkit-scrollbar {
+
+        .pulse-dot {
             width: 8px;
+            height: 8px;
+            background-color: #a3ff00;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 8px #a3ff00;
+            animation: pulse 2s infinite;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #4747a1;
-            border-radius: 4px;
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #5b5bbf;
+
+        .loading-shimmer {
+            background: linear-gradient(90deg, #1b2838 25%, #2a3f5a 50%, #1b2838 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Styling for the centered logo */
+        .game-logo {
+            max-width: 400px;
+            width: 100%;
+            filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.2));
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen p-6 md:p-12">
 
-    <div class="min-h-screen p-4 sm:p-8">
-        <!-- Header -->
-        <header class="header-bg p-6 rounded-xl shadow-2xl mb-8">
-            <h1 class="text-4xl font-extrabold text-white">Session Performance Analysis</h1>
-            <p id="survival-status" class="mt-2 text-lg font-semibold"></p>
+    <div class="max-w-6xl mx-auto">
+        <!-- Centered Logo and Title Header -->
+        <header class="mb-16 flex flex-col items-center text-center">
+            <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2312280/logo.png" 
+                 alt="7 Days Blood Moons Logo" 
+                 class="game-logo mb-4"
+                 onerror="this.style.display='none'; document.getElementById('fallback-title').classList.remove('hidden');">
+            
+            <h1 id="fallback-title" class="hidden text-4xl font-bold text-white mb-2 tracking-tighter uppercase">7 Days Blood Moons</h1>
+            
+            <h2 class="text-xl md:text-2xl font-light text-[#66c0f4] tracking-[0.2em] uppercase mb-8">
+                Live Player Count Tracker
+            </h2>
+
+            <button onclick="fetchAllData()" class="bg-[#66c0f4] hover:bg-[#4ea8e0] text-white px-8 py-3 rounded-full font-bold transition-all flex items-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+                Sync Live Data
+            </button>
         </header>
 
-        <!-- Input Section for JSON Data -->
-        <section class="mb-8 p-6 stat-card rounded-xl shadow-lg">
-            <h2 class="text-xl font-bold text-indigo-300 mb-4">Paste Game Session JSON Data Below</h2>
-            <textarea id="json-input" rows="8" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-sm text-gray-200 focus:ring-indigo-500 focus:border-indigo-500" placeholder='Paste your raw JSON data here...'></textarea>
-            <div id="error-message" class="text-red-400 mt-2 text-sm font-semibold hidden"></div>
-            <button id="load-data-btn" class="mt-4 w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition duration-150 ease-in-out shadow-md">
-                Analyze Stats
-            </button>
-        </section>
+        <!-- Status Message Box -->
+        <div id="status-box" class="hidden max-w-2xl mx-auto mb-10 p-4 rounded-lg text-sm border"></div>
 
-        <!-- Dashboard Content -->
-        <div id="stats-dashboard" class="space-y-8">
-            <!-- Key Metrics Section -->
-            <section>
-                <h2 class="text-2xl font-bold text-indigo-400 mb-4 border-b border-indigo-500/50 pb-2">Key Session Totals</h2>
-                <div id="key-metrics" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Cards will be injected here -->
+        <!-- Stats Grid -->
+        <div id="game-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Loading States -->
+            <div class="steam-card rounded-xl overflow-hidden h-[450px] flex flex-col">
+                <div class="h-48 loading-shimmer"></div>
+                <div class="p-6 space-y-4">
+                    <div class="h-8 w-3/4 loading-shimmer rounded"></div>
+                    <div class="h-24 w-full loading-shimmer rounded"></div>
                 </div>
-            </section>
-
-            <!-- Combat Statistics Section -->
-            <section>
-                <h2 class="text-2xl font-bold text-indigo-400 mb-4 border-b border-indigo-500/50 pb-2">Combat and Elimination</h2>
-                <!-- Updated grid to accommodate 4 cards cleanly -->
-                <div id="combat-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Cards will be injected here -->
-                </div>
-            </section>
-
-            <!-- Detailed Breakdowns -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Loot Section -->
-                <section class="stat-card p-6 rounded-xl shadow-lg">
-                    <h3 class="text-xl font-bold mb-4 text-green-400">Loot Acquired</h3>
-                    <ul id="loot-list" class="space-y-2 text-sm">
-                        <!-- Loot items will be injected here -->
-                    </ul>
-                </section>
-
-                <!-- Survivors Killed Section -->
-                <section class="stat-card p-6 rounded-xl shadow-lg">
-                    <h3 class="text-xl font-bold mb-4 text-red-400">Survivor Elimination Log (Total: <span id="total-kills"></span>)</h3>
-                    <div id="survivors-killed-list" class="space-y-4 max-h-96 overflow-y-auto pr-2">
-                        <!-- Kill details will be injected here -->
-                    </div>
-                </section>
             </div>
-
-            <!-- Destructibles & Crafting Section -->
-            <section>
-                <h2 class="text-2xl font-bold text-indigo-400 mb-4 border-b border-indigo-500/50 pb-2">Crafting & Destruction</h2>
-                <div id="crafting-destruction-stats" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <!-- Cards will be injected here -->
+            <div class="steam-card rounded-xl overflow-hidden h-[450px] flex flex-col">
+                <div class="h-48 loading-shimmer"></div>
+                <div class="p-6 space-y-4">
+                    <div class="h-8 w-3/4 loading-shimmer rounded"></div>
+                    <div class="h-24 w-full loading-shimmer rounded"></div>
                 </div>
-            </section>
+            </div>
         </div>
+
+        <footer class="mt-20 text-center text-gray-500 text-sm border-t border-white/5 pt-8">
+            <p>Tracking App IDs: 2312280 (Standard) and 4213710 (Demo)</p>
+            <p class="mt-2 text-xs opacity-40 uppercase tracking-widest">Global Telemetry Service v2.1</p>
+        </footer>
     </div>
 
     <script>
-        // Use an empty string for the API key in this context
-        const apiKey = "";
+        const appIds = [2312280, 4213710];
         
-        // Define the JSON data provided by the user (now used as initial content)
-        const defaultJsonData = '{"matchAsSurvivor":false,"nightsSurvived":1,"totalZombiesKillAssisted":0,"totalZombiesKilled":0,"totalPlayersKilled":10,"totalPlayersDeath":0,"kmTravelled":2137.31714,"itemsCrafted":0,"itemsUpgraded":0,"itemsRepaired":0,"longestLife":10.0,"teammatesRevived":0,"teammatesHealed":0,"lootContainersOpened":0,"parachutesOpened":0,"craftingContainersOpened":0,"heroBoxesOpened":0,"zombieMasterKilled":0,"humanRemainsDestroyed":0,"itemsDestroyed":3,"lootContainersDestroyed":3,"parachutesDestroyed":0,"craftingContainersDestroyed":0,"heroBoxesDestroyed":0,"humanRemainsOpened":0,"humanKills":4,"humanDown":6,"DamageDoneByZm":0.0,"zombiesKillAssisted":[],"zombiesKilled":[],"allZombiesKilled":[],"blueprintsBuilt":[],"survivorsKilled":[{"killerEntityId":62,"killType":0,"level":1,"killed":1,"isControlledByPlayer":false,"day":1},{"killerEntityId":62,"killType":0,"level":1,"killed":1,"isControlledByPlayer":true,"day":1},{"killerEntityId":62,"killType":1,"level":1,"killed":1,"isControlledByPlayer":true,"day":1},{"killerEntityId":96,"killType":0,"level":1,"killed":3,"isControlledByPlayer":false,"day":2},{"killerEntityId":99,"killType":0,"level":1,"killed":1,"isControlledByPlayer":true,"day":2},{"killerEntityId":99,"killType":1,"level":1,"killed":1,"isControlledByPlayer":true,"day":2},{"killerEntityId":96,"killType":1,"level":1,"killed":2,"isControlledByPlayer":false,"day":2}],"blueprintsDestroyed":[{"containerType":5,"level":3,"amount":1},{"containerType":5,"level":2,"amount":1},{"containerType":5,"level":1,"amount":1}],"lootFromSession":[{"itemName":"resourceBone","itemType":5,"quantity":28},{"itemName":"resourceFlesh","itemType":5,"quantity":20},{"itemName":"resourceBrain","itemType":5,"quantity":8},{"itemName":"currencyBloodDust","itemType":7,"quantity":40}],"tokenUsedByDay":{"1":{"ZombieSpawnGroupWorker0":3,"ZombieSpawnGroupFatCop0":1},"2":{"ZombieSpawnGroupWorker0":1,"ZombieSpawnGroupSkater0":1,"ZombieSpawnGroupFatCop0":1,"ZombieSpawnGroupPutridGirl0":1,"ZombieSpawnGroupJoeFeral0":1,"ZombieSpawnGroupJoeFeral1":1,"ZombieSpawnGroupJoeFeral2":1,"ZombieSpawnGroupJoeFeral3":1}},"damageByAIZombies":{},"resourcesObtainedByDay":{},"healthObtainedByDay":{},"ammoObtainedByDay":{},"constructibleConstructedDay":{},"constructibleUpgradedDay":{},"constructibleRepairedDay":{},"zombieKillType":{},"zombieMasterCall":{"1":{"cancel":2},"2":{"cancel":2,"attack":1}},"destructibleDay":{"1":{"ironShape":1,"cobblestoneBlock":1,"strongWoodBlock":1}},"meritBadgeChosen":{},"AllLootContainersInMatch":0,"AllLootContainersDestroyedInMatch":3}';
+        // Failover proxy system
+        const proxyServices = [
+            (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+            (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`
+        ];
 
-        // Custom mapping for better display names
-        const statLabels = {
-            nightsSurvived: "Nights Survived",
-            totalPlayersKilled: "Total Player Kills",
-            kmTravelled: "Distance Traveled",
-            longestLife: "Longest Life (Minutes)",
-            humanKills: "Confirmed Kills",
-            humanDown: "Players Downed",
-            totalPlayersDeath: "Player Deaths",
-            // Updated Labels
-            standardZombieKills: "Standard Zombie Kills",
-            zombieMasterKilled: "Zombie Master Kills",
-            itemsCrafted: "Items Crafted",
-            itemsDestroyed: "Items Destroyed",
-            lootContainersDestroyed: "Loot Containers Destroyed",
-            lootContainersOpened: "Loot Containers Opened",
-        };
+        async function fetchWithFallback(targetUrl) {
+            let lastError = null;
+            for (const proxyFn of proxyServices) {
+                const proxiedUrl = proxyFn(targetUrl);
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 8000);
+                    const response = await fetch(proxiedUrl, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return await response.json();
+                } catch (err) {
+                    lastError = err;
+                }
+            }
+            throw lastError || new Error("Connection failed");
+        }
 
-        const icons = {
-            nightsSurvived: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>',
-            totalPlayersKilled: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>',
-            kmTravelled: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>',
-            longestLife: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
-            humanKills: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M10 12h.01M14 12h.01m-9.828 4.414L3 20H1V6a2 2 0 012-2h18a2 2 0 012 2v14h-2.172l-2.414-2.414a5.002 5.002 0 00-7.072 0z" /></svg>',
-            humanDown: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>',
-            // Icons for new zombie stats
-            standardZombieKills: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>',
-            zombieMasterKilled: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M10 9a1 1 0 10-2 0 1 1 0 002 0zM16 9a1 1 0 10-2 0 1 1 0 002 0zM12 16a4 4 0 00-4 4h8a4 4 0 00-4-4z"/></svg>',
-            itemsCrafted: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 4a2 2 0 100 4m-2 2v5a2 2 0 002 2h4a2 2 0 002-2v-5m-6 0h6" /></svg>',
-            itemsDestroyed: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>',
-            lootContainersDestroyed: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-2 4h4a2 2 0 002-2v-2h-8v2a2 2 0 002 2z" /><path stroke-linecap="round" stroke-linejoin="round" d="M18 10a4 4 0 00-8 0v1h8v-1z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4a2 2 0 012-2h2a2 2 0 012 2v2M8 6V4a2 2 0 00-2-2H4a2 2 0 00-2 2v2" /></svg>',
-            lootContainersOpened: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>',
-        };
+        function showStatus(message, isError = true) {
+            const box = document.getElementById('status-box');
+            if (!box) return;
+            box.innerText = message;
+            box.className = `max-w-2xl mx-auto mb-10 p-4 rounded-lg text-sm border ${
+                isError ? 'bg-red-500/10 text-red-400 border-red-500/30' : 'bg-blue-500/10 text-blue-400 border-blue-500/30'
+            }`;
+            box.classList.remove('hidden');
+            setTimeout(() => box.classList.add('hidden'), 8000);
+        }
 
+        async function fetchGameData(id) {
+            const storeUrl = `https://store.steampowered.com/api/appdetails?appids=${id}`;
+            const playersUrl = `https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=${id}`;
+            
+            try {
+                const [storeData, playersData] = await Promise.all([
+                    fetchWithFallback(storeUrl),
+                    fetchWithFallback(playersUrl)
+                ]);
 
-        // Function to create an individual stat card element
-        const createStatCard = (label, value, icon, formatter = v => v) => {
-            const card = document.createElement('div');
-            card.className = 'stat-card p-4 rounded-lg shadow-xl flex items-center space-x-4 border-b-4 border-indigo-600';
-            card.innerHTML = `
-                ${icon}
-                <div>
-                    <p class="text-xs font-medium text-gray-400 uppercase">${label}</p>
-                    <p class="text-2xl font-extrabold text-white">${formatter(value)}</p>
+                const gameResult = storeData[id];
+                if (!gameResult || !gameResult.success) {
+                    return createErrorCard(id, "Content restricted. App may be unreleased or hidden.");
+                }
+
+                return createGameCard(gameResult.data, playersData.response?.player_count || 0);
+            } catch (error) {
+                return createErrorCard(id, `Proxy error: ${error.message}`);
+            }
+        }
+
+        function createGameCard(game, players) {
+            const isDemo = game.type === 'demo';
+            const price = game.is_free ? "Free" : (game.price_overview ? game.price_overview.final_formatted : "Coming Soon");
+            
+            return `
+                <div class="steam-card rounded-xl overflow-hidden flex flex-col">
+                    <div class="relative overflow-hidden group h-48">
+                        <img src="${game.header_image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="${game.name}">
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-black/80 backdrop-blur-md text-[9px] font-black px-3 py-1 rounded-sm text-white uppercase tracking-widest border border-white/20">
+                                ${isDemo ? 'DEMO VERSION' : 'FULL GAME'}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="flex items-center text-sm font-bold text-[#a3ff00] mb-3">
+                            <span class="pulse-dot"></span>
+                            ${players.toLocaleString()} IN-GAME
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2 tracking-tight">${game.name}</h2>
+                        <p class="text-gray-400 text-sm line-clamp-3 mb-8">
+                            ${game.short_description}
+                        </p>
+                        <div class="mt-auto pt-4 border-t border-white/5 flex items-end justify-between">
+                            <div>
+                                <p class="text-[9px] text-gray-500 uppercase tracking-widest font-bold">App ID ${game.steam_appid}</p>
+                                <p class="text-xl font-bold text-[#66c0f4]">${price}</p>
+                            </div>
+                            <a href="https://store.steampowered.com/app/${game.steam_appid}" target="_blank" class="bg-[#323f4c] hover:bg-[#4b5a6a] text-white px-5 py-2 rounded text-xs font-bold transition-all uppercase tracking-wider">
+                                Store
+                            </a>
+                        </div>
+                    </div>
                 </div>
             `;
-            return card;
-        };
-
-        // Function to clear previous dashboard contents
-        function clearDashboard() {
-            // List of IDs to clear
-            const sectionsToClear = ['survival-status', 'key-metrics', 'combat-stats', 'crafting-destruction-stats', 'loot-list', 'survivors-killed-list'];
-            sectionsToClear.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    // Clear status text and classes
-                    if (id === 'survival-status') {
-                        el.textContent = '';
-                        el.classList.remove('text-green-400', 'text-red-400');
-                    } else {
-                        el.innerHTML = '';
-                    }
-                }
-            });
-            // Hide the error message
-            document.getElementById('error-message').classList.add('hidden');
         }
 
+        function createErrorCard(id, msg) {
+            return `
+                <div class="steam-card rounded-xl p-8 flex flex-col items-center justify-center text-center opacity-60 min-h-[400px]">
+                    <div class="w-12 h-12 rounded-full bg-yellow-500/10 flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white italic">Node Unavailable</h3>
+                    <p class="text-gray-500 text-xs mt-1 mb-4 tracking-tighter">App ID: ${id}</p>
+                    <p class="text-gray-400 text-xs">${msg}</p>
+                </div>
+            `;
+        }
 
-        // Function to process and render the stats
-        function renderStats(jsonData) {
-            clearDashboard(); // Clear existing content first
-
-            const errorEl = document.getElementById('error-message');
-
-            if (!jsonData || jsonData.trim() === '') {
-                errorEl.textContent = "Please paste valid JSON data to analyze.";
-                errorEl.classList.remove('hidden');
-                return;
-            }
-
-            let stats;
+        async function fetchAllData() {
+            const grid = document.getElementById('game-grid');
+            if (!grid) return;
+            grid.style.opacity = '0.3';
+            
             try {
-                stats = JSON.parse(jsonData);
-            } catch (e) {
-                console.error("Failed to parse JSON statistics:", e);
-                errorEl.textContent = `Error: Invalid JSON format provided. Details: ${e.message}`;
-                errorEl.classList.remove('hidden');
-                return;
-            }
-
-            // --- 1. Survival Status ---
-            const statusEl = document.getElementById('survival-status');
-            if (stats.matchAsSurvivor) {
-                statusEl.textContent = "Status: SURVIVOR - Match Completed Successfully.";
-                statusEl.classList.add('text-green-400');
-            } else {
-                statusEl.textContent = "Status: ELIMINATED - Match Did Not Complete As Survivor.";
-                statusEl.classList.add('text-red-400');
-            }
-
-            // --- 2. Key Metrics ---
-            const keyMetricsEl = document.getElementById('key-metrics');
-            keyMetricsEl.appendChild(createStatCard(statLabels.nightsSurvived, stats.nightsSurvived, icons.nightsSurvived));
-            keyMetricsEl.appendChild(createStatCard(statLabels.longestLife, stats.longestLife, icons.longestLife));
-            keyMetricsEl.appendChild(createStatCard(statLabels.kmTravelled, stats.kmTravelled, icons.kmTravelled, v => `${v.toFixed(2)} km`));
-            keyMetricsEl.appendChild(createStatCard(statLabels.totalPlayersKilled, stats.totalPlayersKilled, icons.totalPlayersKilled));
-
-
-            // --- 3. Combat Stats ---
-            const combatStatsEl = document.getElementById('combat-stats');
-            
-            // Calculate Standard Zombie Kills (Total Zombies - ZM Master Kills)
-            const standardZombieKills = stats.totalZombiesKilled - stats.zombieMasterKilled;
-
-            combatStatsEl.appendChild(createStatCard(statLabels.humanKills, stats.humanKills, icons.humanKills, v => `${v} Kills`));
-            combatStatsEl.appendChild(createStatCard(statLabels.humanDown, stats.humanDown, icons.humanDown, v => `${v} Downs`));
-            
-            // Add the two separated zombie kill cards, using 'Zombies' instead of 'ZMs'
-            combatStatsEl.appendChild(createStatCard(statLabels.standardZombieKills, standardZombieKills, icons.standardZombieKills, v => `${v} Zombies`));
-            combatStatsEl.appendChild(createStatCard(statLabels.zombieMasterKilled, stats.zombieMasterKilled, icons.zombieMasterKilled, v => `${v} Zombies`));
-
-
-            // --- 4. Crafting & Destruction Stats ---
-            const craftingDestructionEl = document.getElementById('crafting-destruction-stats');
-            craftingDestructionEl.appendChild(createStatCard(statLabels.itemsCrafted, stats.itemsCrafted, icons.itemsCrafted));
-            craftingDestructionEl.appendChild(createStatCard(statLabels.itemsDestroyed, stats.itemsDestroyed, icons.itemsDestroyed));
-            craftingDestructionEl.appendChild(createStatCard(statLabels.lootContainersDestroyed, stats.lootContainersDestroyed, icons.lootContainersDestroyed));
-            craftingDestructionEl.appendChild(createStatCard(statLabels.lootContainersOpened, stats.lootContainersOpened, icons.lootContainersOpened));
-
-
-            // --- 5. Loot Acquired Breakdown ---
-            const lootListEl = document.getElementById('loot-list');
-            if (stats.lootFromSession && stats.lootFromSession.length > 0) {
-                stats.lootFromSession.forEach(loot => {
-                    const listItem = document.createElement('li');
-                    // Simple formatting for item names
-                    const displayName = loot.itemName.replace(/([A-Z])/g, ' $1').replace('resource', '').trim().toUpperCase();
-                    listItem.className = 'flex justify-between items-center p-2 bg-gray-700/30 rounded-md';
-                    listItem.innerHTML = `
-                        <span class="font-semibold text-gray-300">${displayName}</span>
-                        <span class="text-lg font-extrabold text-green-300">${loot.quantity}</span>
-                    `;
-                    lootListEl.appendChild(listItem);
-                });
-            } else {
-                lootListEl.innerHTML = '<li class="text-gray-500">No specific loot recorded.</li>';
-            }
-
-            // --- 6. Survivors Killed Breakdown ---
-            const survivorsKilledEl = document.getElementById('survivors-killed-list');
-            document.getElementById('total-kills').textContent = stats.survivorsKilled.length; // Use the array length for the total count of events
-            
-            if (stats.survivorsKilled && stats.survivorsKilled.length > 0) {
-                stats.survivorsKilled.forEach((kill, index) => {
-                    const source = kill.isControlledByPlayer ? 'Player-Controlled' : 'AI-Controlled';
-                    const killType = kill.killType === 0 ? 'Normal Kill' : 'Finisher/Execution';
-                    const listItem = document.createElement('div');
-                    listItem.className = 'bg-red-900/30 p-3 rounded-lg border-l-4 border-red-500';
-                    listItem.innerHTML = `
-                        <p class="font-bold text-red-300">Elimination #${index + 1} (Day ${kill.day})</p>
-                        <p class="text-xs text-gray-400 mt-1">
-                            By Entity <span class="text-white">${kill.killerEntityId}</span> (Level ${kill.level}) | 
-                            Type: <span class="text-white">${killType}</span> | 
-                            Source: <span class="text-white">${source}</span>
-                        </p>
-                    `;
-                    survivorsKilledEl.appendChild(listItem);
-                });
-            } else {
-                survivorsKilledEl.innerHTML = '<div class="text-gray-500">No survivor elimination events recorded.</div>';
+                const results = await Promise.all(appIds.map(id => fetchGameData(id)));
+                grid.innerHTML = results.join('');
+            } catch (err) {
+                showStatus("Network Error: All proxy gateways are currently blocked or down.");
+            } finally {
+                grid.style.opacity = '1';
             }
         }
 
-        // Initialization and Event Listener Setup
-        window.onload = function() {
-            const inputEl = document.getElementById('json-input');
-            const loadBtn = document.getElementById('load-data-btn');
-            
-            // Set default data in the textarea
-            inputEl.value = defaultJsonData;
-
-            // Load initial data on page load
-            renderStats(defaultJsonData);
-
-            // Add event listener for the button
-            loadBtn.addEventListener('click', () => {
-                renderStats(inputEl.value);
-            });
-        };
+        window.onload = () => setTimeout(fetchAllData, 200);
     </script>
 </body>
 </html>
